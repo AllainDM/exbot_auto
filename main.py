@@ -78,13 +78,13 @@ def test_timer():
 def send_telegram(text_to_bot):
     print(f"Функция отправки сообщения в телеграмм. {text_to_bot}")
     url_msg = f'https://api.telegram.org/bot{config.BOT_API_TOKEN}/sendMessage'
-    # Будем отправлять сообщение в личку
-    # data_to_chat = {
-    #     'chat_id': config.chat_id,
-    #     'text': text_to_bot,
-    #     'parse_mode': 'HTML'
-    # }
-    # requests.post(url=url, data=data_to_chat)
+    # Будем отправлять сообщение в чат
+    data_to_chat = {
+        'chat_id': config.chat_id,
+        'text': text_to_bot,
+        'parse_mode': 'HTML'
+    }
+    requests.post(url=url_msg, data=data_to_chat)
 
     # Будем отправлять сообщение в личку
     data_to_user = {
@@ -101,7 +101,7 @@ def send_telegram_file(file_name):
     url_file = f'https://api.telegram.org/bot{config.BOT_API_TOKEN}/sendDocument'
 
     data_for_file = {
-        'chat_id': config.tg_user_id,
+        'chat_id': config.chat_id,
         # 'caption': "Отчёт"
     }
     with open(file_name, 'rb') as f:
@@ -178,7 +178,8 @@ def auto_report():
         send_telegram(f"Файл {name_table} не найден")
 
 
-schedule.every().day.at("00:05").do(auto_report)
+schedule.every().day.at("04:00").do(auto_report)
+# schedule.every(1).minutes.do(test_timer)
 
 
 # Для ТО Запад
@@ -588,7 +589,7 @@ if __name__ == '__main__':
     create_folder()
     print("Бот запущен")
     # Тестовая отправка сообщения в телеграм
-    test_timer()
+    # test_timer()
     # executor.start_polling(dp, skip_updates=True)
     # auto_report()
     while True:
