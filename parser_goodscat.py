@@ -48,9 +48,17 @@ def save_from_goodscat_for_day(table, status, date2, area):
         # Отдельно берем адрес, заодно уберем лишние пробелы по краям
         address = address_class.text.strip()
         address = address.split(",")
-        user.append(address[0])  # Адрес
-        user.append(address[-2][2:])  # Адрес
-        user.append(address[-1][4:])  # Адрес
+        # Тут придется вручную отсеивать поселки
+        if address[0] == "Парголово" or \
+                address[0] == "Шушары" or \
+                address[0] == "Мурино" or \
+                address[0] == "Песочный" or \
+                address[0] == "Новогорелово":
+            user.append(address[1].strip())  # Адрес. Тут еще раз сразу порежем пробелы по краям
+        else:
+            user.append(address[0])  # Адрес
+        user.append(address[-2][2:])  # Адрес. Тут видимо номер дома?
+        user.append(address[-1][4:])  # Адрес. А тут видимо номер квартиры?
 
         user.append(answer[1])  # Мастер
         user.append(area)  # Район

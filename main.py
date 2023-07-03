@@ -81,12 +81,12 @@ def send_telegram(text_to_bot):
     print(f"Функция отправки сообщения в телеграмм. {text_to_bot}")
     url_msg = f'https://api.telegram.org/bot{config.BOT_API_TOKEN}/sendMessage'
     # Будем отправлять сообщение в чат
-    data_to_chat = {
-        'chat_id': config.chat_id,
-        'text': text_to_bot,
-        'parse_mode': 'HTML'
-    }
-    requests.post(url=url_msg, data=data_to_chat)
+    # data_to_chat = {
+    #     'chat_id': config.chat_id,
+    #     'text': text_to_bot,
+    #     'parse_mode': 'HTML'
+    # }
+    # requests.post(url=url_msg, data=data_to_chat)
 
     # Будем отправлять сообщение в личку
     data_to_user = {
@@ -110,11 +110,13 @@ def send_telegram_file(file_name):
         'chat_id': config.tg_user_id,
         # 'caption': "Отчёт"
     }
-    with open(file_name, 'rb') as f:
-        files = {'document': f}
-        requests.post(url_file, data=data_for_file, files=files)
-        # requests.post(url_file, data=data_for_file_ls, files=files)
+    # # Отправка файла в общий чат
+    # with open(file_name, 'rb') as f:
+    #     files = {'document': f}
+    #     requests.post(url_file, data=data_for_file, files=files)
+    #     # requests.post(url_file, data=data_for_file_ls, files=files)
 
+    # Отправка файла в личку
     with open(file_name, 'rb') as f:
         files = {'document': f}
         # requests.post(url_file, data=data_for_file, files=files)
