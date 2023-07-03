@@ -72,6 +72,8 @@ async def echo_mess(message: types.Message):
 def test_timer():
     print("Таймер работает")
     send_telegram("Бот запущен")
+    # Отправим тестовый файл
+    send_telegram_file("TOWest/test.txt")
 
 
 # Функция отправки сообщения в телеграмм
@@ -104,9 +106,19 @@ def send_telegram_file(file_name):
         'chat_id': config.chat_id,
         # 'caption': "Отчёт"
     }
+    data_for_file_ls = {
+        'chat_id': config.tg_user_id,
+        # 'caption': "Отчёт"
+    }
     with open(file_name, 'rb') as f:
         files = {'document': f}
         requests.post(url_file, data=data_for_file, files=files)
+        # requests.post(url_file, data=data_for_file_ls, files=files)
+
+    with open(file_name, 'rb') as f:
+        files = {'document': f}
+        # requests.post(url_file, data=data_for_file, files=files)
+        requests.post(url_file, data=data_for_file_ls, files=files)
 
 
 # Получить подключенных абонентов за один день
@@ -199,7 +211,7 @@ def day_west(start_day, date_now, date_for_goodscat, name_table):
     if config.gk_need:
         for st in status:
             for ar in areas:
-                time.sleep(3)  # Небольшая задержка от бана
+                time.sleep(config.delay)  # Небольшая задержка от бана
                 answer_gk = get_html_goodscat_for_day(date_for_goodscat, ar, t_o, st)
                 answer += answer_gk
                 print(answer_gk)
@@ -232,7 +244,7 @@ def day_south(start_day, date_now, date_for_goodscat, name_table):
     if config.gk_need:
         for st in status:
             for ar in areas:
-                time.sleep(3)  # Небольшая задержка от бана
+                time.sleep(config.delay)  # Небольшая задержка от бана
                 answer += get_html_goodscat_for_day(date_for_goodscat, ar, t_o, st)
 
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
@@ -259,7 +271,7 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
     if config.gk_need:
         for st in status:
             for ar in areas:
-                time.sleep(3)  # Небольшая задержка от бана
+                time.sleep(config.delay)  # Небольшая задержка от бана
                 answer += get_html_goodscat_for_day(date_for_goodscat, ar, t_o, st)
     # Для севера ЭХ сверху
     answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link)
@@ -286,7 +298,7 @@ def day_east(start_day, date_now, date_for_goodscat, name_table):
     if config.gk_need:
         for st in status:
             for ar in areas:
-                time.sleep(3)  # Небольшая задержка от бана
+                time.sleep(config.delay)  # Небольшая задержка от бана
                 answer += get_html_goodscat_for_day(date_for_goodscat, ar, t_o, st)
 
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
@@ -589,7 +601,7 @@ if __name__ == '__main__':
     create_folder()
     print("Бот запущен")
     # Тестовая отправка сообщения в телеграм
-    # test_timer()
+    test_timer()
     # executor.start_polling(dp, skip_updates=True)
     # auto_report()
     while True:

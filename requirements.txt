@@ -1,4 +1,4 @@
-# pip install requests aiogram beautifulsoup4 lxml xlwt xlrd
+# pip install requests aiogram beautifulsoup4 lxml xlwt xlrd schedule
 
 requests
 aiogram
