@@ -15,6 +15,7 @@ def save_from_goodscat_for_day(table, status, date2, area):
     for i in table:
         user = []
         td_class_all = i.find_all('td', class_="")
+        print(f"td_class_all24146: {td_class_all}")
         date1 = td_class_all[10].text[0:10]
         # Первым делом отсеим даты, при статусе Архив
         # Для статуса Архив, должна быть "вчерашняя" дата, то есть получаемая аргументом
@@ -34,7 +35,7 @@ def save_from_goodscat_for_day(table, status, date2, area):
             if answer[1] == "ИС" or answer[1] == "И С":
                 print(f"answer23451 {answer}")
                 continue
-        print(f"answer {answer}")
+        print(f"answer156 {answer}")
 
         user.append("ЭтХоум")  # Бренд
 

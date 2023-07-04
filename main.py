@@ -206,12 +206,6 @@ def auto_report():
         send_telegram(f"Файл {name_table} не найден")
 
 
-# Автоматический запуск парсера по таймеру.
-# Время запуска берется из конфига(строка)
-schedule.every().day.at(config.time_for_start_parser).do(auto_report)
-# schedule.every(1).minutes.do(test_timer)
-
-
 # Для ТО Запад
 def day_west(start_day, date_now, date_for_goodscat, name_table):
     t_o = "TOWest"  # Название для файла
@@ -615,13 +609,21 @@ def create_folder():
         os.makedirs(f"TOSouth")
 
 
+def main():
+    # Автоматический запуск парсера по таймеру.
+    # Время запуска берется из конфига(строка)
+    schedule.every().day.at(config.time_for_start_parser).do(auto_report)
+    # schedule.every(1).minutes.do(test_timer)
+    while True:
+        schedule.run_pending()
+        # time.sleep(1)
+
+
 if __name__ == '__main__':
     create_folder()
     print("Бот запущен")
     # Тестовая отправка сообщения в телеграм
-    test_timer()
+    # test_timer()
     # executor.start_polling(dp, skip_updates=True)
     # auto_report()
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    main()
