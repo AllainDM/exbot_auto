@@ -1,3 +1,4 @@
+import subprocess
 from datetime import datetime, timedelta
 import os
 import time
@@ -30,6 +31,11 @@ bot = Bot(token=config.BOT_API_TOKEN)
 dp = Dispatcher(bot)
 
 answ = ()
+
+# Запустим скрипт включающий vpn перед загрузкой программы
+subprocess.call(['sh', './vpn.sh'])
+# Добавим ожидание запуска
+time.sleep(6)
 
 url_login = "http://us.gblnet.net/oper/"
 url_login_goodscat = "https://inet.athome.pro/goodscat/user/authorize/"
@@ -129,6 +135,10 @@ def send_telegram_file(file_name):
 
 # Получить подключенных абонентов за один день
 def auto_report():
+    # Подключимся к vpn
+    subprocess.call(['sh', './vpn.sh'])
+    # Добавим ожидание запуска к vpn
+    time.sleep(6)
     # Запишем предварительно переменные для сохранения даты
     date_user = ""
     date_gk = ""
@@ -196,7 +206,9 @@ def auto_report():
         send_telegram(f"Файл {name_table} не найден")
 
 
-schedule.every().day.at("04:00").do(auto_report)
+# Автоматический запуск парсера по таймеру.
+# Время запуска берется из конфига(строка)
+schedule.every().day.at(config.time_for_start_parser).do(auto_report)
 # schedule.every(1).minutes.do(test_timer)
 
 
