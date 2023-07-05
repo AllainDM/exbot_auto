@@ -1,0 +1,21 @@
+# ide
+.idea/
+__pycache__/
+
+# Конфиг
+config.py
+
+# Запишем папки, чтоб не загружать файлы созданные при тестах
+TOEast
+TONorth
+TOSouth
+TOWest
+
+# Файлы со старым кодом
+old.txt
+old
+
+# Скрипты.
+# Пропишем их поскольку отличаются названия vpn.
+vpn_up.sh
+vpn_down.sh

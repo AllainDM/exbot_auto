@@ -1,5 +1,6 @@
 1. Включение vpn
 vpn_up.sh
+
 #!/bin/bash
 
 nmcli c up gkvpn2
@@ -7,6 +8,7 @@ nmcli c up gkvpn2
 
 2. Выключение vpn
 vpn_down.sh
+
 #!/bin/bash
 
 nmcli c down gkvpn2
