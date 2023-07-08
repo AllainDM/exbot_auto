@@ -42,9 +42,44 @@ HEADERS = {
 }
 
 # Глобально создадим обьекты сессий, будем их обновлять перед запуском парсера
-response_users = ""
-response_goodscat = ""
-response_netup = ""
+# response_users = None
+# response_goodscat = ""
+# response_netup = ""
+
+# TODO
+# Тестово создадим как было
+subprocess.call(['sh', './vpn_up.sh'])
+# Добавим ожидание запуска
+time.sleep(6)
+#
+data_users = {
+    "action": "login",
+    "username": config.loginUS,
+    "password": config.pswUS
+}
+response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
+# session_users.post(url_login, data=data_users, headers=HEADERS)
+print("Сессия Юзера создана 1")
+
+data_goodscat = {
+    "redirect": [1, 1],
+    "login": config.login_goodscat,
+    "pwd": config.psw_goodscat,
+    "auto": "ok",
+}
+response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
+# session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
+print("Сессия ГК создана 1")
+
+data_netup = {
+    "login": config.loginUS,
+    "password": config.pswUS,
+    "phone": "",
+    "redirect": "https://billing.athome.pro/"
+}
+response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
+# session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
+print("Сессия Нетаба создана 1")
 
 
 def create_sessions():
@@ -53,35 +88,30 @@ def create_sessions():
     # Добавим ожидание запуска
     time.sleep(6)
 
+    global data_users
+    global data_goodscat
+    global data_netup
+
     global response_users
     global response_goodscat
     global response_netup
 
-    data_users = {
-        "action": "login",
-        "username": config.loginUS,
-        "password": config.pswUS
-    }
+    global session_users
+    global session_goodscat
+    global session_netup
+
     response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
-    print("Сессия Юзера создана")
+    # session_users.post(url_login, data=data_users, headers=HEADERS)
+    print("Сессия Юзера создана 2")
 
-    data_goodscat = {
-        "redirect": [1, 1],
-        "login": config.login_goodscat,
-        "pwd": config.psw_goodscat,
-        "auto": "ok",
-    }
     response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
-    print("Сессия ГК создана")
+    # session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
+    print("Сессия ГК создана 2")
 
-    data_netup = {
-        "login": config.loginUS,
-        "password": config.pswUS,
-        "phone": "",
-        "redirect": "https://billing.athome.pro/"
-    }
     response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
-    print("Сессия Нетаба создана")
+    # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
+    print("Сессия Нетаба создана 2")
+    # print(response_netup)
 
 
 # Тестовая функция для проверки даты
@@ -151,10 +181,10 @@ def send_telegram_file(file_name):
 # Получить подключенных абонентов за один день
 def auto_report():
     # Подключимся к vpn
-    subprocess.call(['sh', './vpn_up.sh'])
+    # subprocess.call(['sh', './vpn_up.sh'])
     # Добавим ожидание запуска к vpn
-    time.sleep(6)
-    # Создадим сессии, подключимся к биллингам
+    # time.sleep(6)
+    # Создадим сессии, подключимся к биллингам. Подключение к впн идет внутри функции
     create_sessions()
     # Запишем предварительно переменные для сохранения даты
     date_user = ""
@@ -186,6 +216,7 @@ def auto_report():
     except FileNotFoundError:
         send_telegram(f"Файл {name_table} не найден")
 
+    # Ниже для тестов закроем все кроме севера
     # Запустим парсеры для ТО Юг, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
     day_south(date_user, date_user, date_gk, name_table)
@@ -352,7 +383,7 @@ def auto_report_week():
     # Добавим ожидание запуска к vpn
     time.sleep(6)
     # Создадим сессии, подключимся к биллингам
-    create_sessions()
+    # create_sessions()
     print("Дата")
     # Соберем прошлую неделю от среды как -10 и -3 дня от текущей даты
     date_now = datetime.now()
@@ -521,6 +552,15 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
 
 # Парсер ГК для сбора подключений за один(обязательно вчерашний) день
 def get_html_goodscat_for_day(date, area, t_o, status):
+    # Пропишем использование глобальных переменных с сессиями
+    # global response_users
+    # global response_goodscat
+    # global response_netup
+
+    # global session_goodscat
+    # global session_users
+    # global session_netup
+
     url_link = ""  # Ссылка устанавливается в зависимости от выбора района и даты
     if area == "Адмиралтейский":
         if status == "archive":
@@ -673,7 +713,9 @@ def get_html_goodscat_for_day(date, area, t_o, status):
                 if area == "Кировский" or area == "Московский" or area == "Фрунзенский":
                     print("Есть спорные районы")
                     table = parser_goodscat.street_filter(table, t_o)
-            answer = parser_goodscat.save_from_goodscat_for_day(table, status, date, area)
+            # answer = parser_goodscat.save_from_goodscat_for_day(table, status, date, area)
+            # Тестово запускаем из главного файла
+            answer = save_from_goodscat_for_day(table, status, date, area)
             return answer
         else:
             print("error")
@@ -682,9 +724,91 @@ def get_html_goodscat_for_day(date, area, t_o, status):
         print(f'{link} : {e}')
 
 
+# Функция сбора подключений из ГК за прошлый день. Различается по статусу
+# Тестово запускаем из главного файла
+def save_from_goodscat_for_day(table, status, date2, area):
+    arr = []
+    print(f'Всего должно быть абонентов {len(table)}')
+    for i in table:
+        user = []
+        td_class_all = i.find_all('td', class_="")
+        # print(f"td_class_all24146: {td_class_all}")
+        date1 = td_class_all[10].text[0:10]
+        # Первым делом отсеим даты, при статусе Архив
+        # Для статуса Архив, должна быть "вчерашняя" дата, то есть получаемая аргументом
+        # if status == "archive":
+        if date2 != date1:
+            continue
+
+        # У адреса другой класс
+        address_class = i.find('td', class_="addr")
+        # Тут нужно запустить парсер для Нетаба, но хз как его запускать отсюда
+        # user.append(td_class_all[1].text)  # 0 = Номер ГК
+        gk_num = td_class_all[1].text
+        print(f"Запускаем Нетаб, ищем пользователя: {gk_num}")
+        answer = parser_netup(gk_num)
+        # Нужно исключить заявки Горохова. Это мастер ИС
+        # Будем искать его в определенных районах
+        if area == "Красногвардейский":
+            if answer[1] == "ИС" or answer[1] == "И С":
+                print(f"answer23451 {answer}")
+                continue
+        print(f"answer156 {answer}")
+
+        user.append("ЭтХоум")  # Бренд
+
+        # У даты нужно обрезать время, заменить тире и развернуть
+        date1 = date1.split("-")
+        date1 = f"{date1[2]}.{date1[1]}.{date1[0]}"
+        user.append(date1)  # Дата
+
+        user.append(answer[0])  # Договор
+
+        # Отдельно берем адрес, заодно уберем лишние пробелы по краям
+        address = address_class.text.strip()
+        address = address.split(",")
+        # Тут придется вручную отсеивать поселки
+        if address[0] == "Парголово" or \
+                address[0] == "Шушары" or \
+                address[0] == "Мурино" or \
+                address[0] == "Песочный" or \
+                address[0] == "Новогорелово":
+            user.append(address[1].strip())  # Адрес. Тут еще раз сразу порежем пробелы по краям
+        else:
+            user.append(address[0])  # Адрес
+        user.append(address[-2][2:])  # Адрес. Тут видимо номер дома?
+        # Необходимо убрать подпись "new" у некоторых квартир
+        address_kv = address[-1][4:]
+        if len(address_kv) > 3:
+            print(f"Подозрение на подпись 'new' у квартиры {address_kv}")
+            if address_kv[-3:] == "new":
+                print(f"address_kv[-3:] '{address_kv[-3:]}'. Длинна: {len(address_kv)}")
+                # Дополнительно там идет пробел. Непонятно только всегда ли
+                # if address_kv[0:-4] == " ":
+                user.append(address_kv[0:-4])
+                # else:
+                #     user.append(address_kv[0:-3])
+            else:
+                user.append(address[-1][4:])  # Адрес. А тут видимо номер квартиры?
+        else:
+            user.append(address[-1][4:])  # Адрес. А тут видимо номер квартиры?
+
+        user.append(answer[1])  # Мастер
+        user.append(area)  # Район
+        user.append(answer[2])  # Метраж
+
+        arr.append(user)  # Добавим итог в общий массив с адресами
+    return arr
+
+
 # Парсер Нетаба
 # Запуск из файла parser_goodscat.py
 def parser_netup(gk_num):
+    # Пропишем использование глобальных переменных с сессиями
+    # global session_netup
+    # session_netup = requests.Session()
+    # global response_netup
+
     url_link = f"https://billing.athome.pro/payments.php?view={gk_num}&source=inet_dev"
     try:
         html = session_netup.get(url_link)
@@ -978,23 +1102,22 @@ def create_folder():
 
 def main():
     # Создадим сессии, подключимся к биллингам
-    create_sessions()
+    # Не будем лишний раз этого делать, только непосредственно перед запуском парсера
+    # create_sessions()
+    # В случае теста сразу запустим создание отчета
+    if config.global_test:
+        # test_timer()  # Тестовая отправка сообщения в телеграм
+        auto_report()
+
     # Автоматический запуск парсера по таймеру.
     # Время запуска берется из конфига(строка)
     schedule.every().day.at(config.time_for_start_parser).do(auto_report)
-    # schedule.every(1).minutes.do(test_timer)
-    # В случае теста сразу запустим создание отчета
-    if config.global_test:
-        test_timer()  # Тестовая отправка сообщения в телеграм
-        auto_report()
-
     while True:
         schedule.run_pending()
-        # time.sleep(1)
 
 
 if __name__ == '__main__':
-    create_folder()
+    create_folder()  # Создание папок под ТО
     print("Бот запущен")
     # executor.start_polling(dp, skip_updates=True)
     # auto_report()
