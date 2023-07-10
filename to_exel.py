@@ -2,6 +2,7 @@ from datetime import datetime
 
 import xlrd
 import xlwt
+import openpyxl
 
 
 # Наши улицы в "совместных" районах
@@ -217,6 +218,9 @@ def save_all_to_exel(table_name, arr, t_o):
     date_now = datetime.now()
     ws.write(0, 0, f"Версия 004 Время: {date_now}")
 
-    wb.save(f'{t_o}/{t_o_rus}_{table_name}.xls')
+    # wb.set_active_sheet("table_name")
+    # wb.set_active_sheet(value=0)
+    wb.save(f'{t_o}/{t_o_rus}_{table_name}.xlsx')
+
 
 

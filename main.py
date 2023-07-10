@@ -4,8 +4,6 @@ import os
 import time
 import schedule
 
-import xlrd
-# import time
 
 from aiogram import Bot, Dispatcher, executor, types
 # from aiogram.dispatcher.filters import Text
@@ -13,8 +11,10 @@ from aiogram import Bot, Dispatcher, executor, types
 #     ReplyKeyboardMarkup, KeyboardButton, \
 #     InlineKeyboardMarkup, InlineKeyboardButton
 import requests
-# import xlrd
-# import xlwt
+import xlrd
+import xlwt
+import openpyxl
+import pandas as pd
 
 from bs4 import BeautifulSoup
 
@@ -22,6 +22,7 @@ import config
 import to_exel
 import parser_goodscat
 import parser_userside
+import msg_report
 
 session_goodscat = requests.Session()
 session_users = requests.Session()
@@ -181,9 +182,9 @@ def send_telegram_file(file_name):
 # Получить подключенных абонентов за один день
 def auto_report():
     # Подключимся к vpn
-    # subprocess.call(['sh', './vpn_up.sh'])
+    subprocess.call(['sh', './vpn_up.sh'])
     # Добавим ожидание запуска к vpn
-    # time.sleep(6)
+    time.sleep(6)
     # Создадим сессии, подключимся к биллингам. Подключение к впн идет внутри функции
     create_sessions()
     # Запишем предварительно переменные для сохранения даты
@@ -411,20 +412,222 @@ def auto_report_week():
 
     send_telegram(f"Отчет за {name_file_week}")
 
-    # Запустим парсеры для ТО Север, по итогу выполнения функции откроем и вышлем файл
+    read_report()
+
+    # Запустим парсеры, по итогу выполнения функции откроем и вышлем файлы
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    # day_north(date_user, date_user, date_gk, name_table)
-    # # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
-    # try:
-    #     try:
-    #         send_telegram_file(f"TONorth/ТО_Север_{name_table}.xls")
-    #     except:
-    #         print(f"Файл {name_table} не найден")
-    # except FileNotFoundError:
-    #     send_telegram(f"Файл {name_table} не найден")
+    week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
+
+    week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
+
+    week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
+
+    week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
+
+    # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
+    try:
+        try:
+            # Попробуем прочитать файл и отдельным сообщение выдать результаты
+            # read_report(name_file_week, "ТО_Запад")
+            # read_report()
+            # ...
+            send_telegram_file(f"TONorth/ТО_Север_{name_file_week}.xlsx")
+            send_telegram_file(f"TOSouth/ТО_Юг_{name_file_week}.xlsx")
+            send_telegram_file(f"TOWest/ТО_Запад_{name_file_week}.xlsx")
+            send_telegram_file(f"TOEast/ТО_Восток_{name_file_week}.xlsx")
+        except:
+            print(f"!!!!!!!!!!! Файл {name_file_week} не найден")
+    except FileNotFoundError:
+        send_telegram(f"Файл {name_file_week} не найден")
 
     # Отключимся от vpn. Необходимо для удаленного доступа к серверу
     subprocess.call(['sh', './vpn_down.sh'])
+
+
+# def read_report(name_table, to):
+def read_report(to="ТО_Запад"):
+    # book1 = xlrd.open_workbook('TOWest/ТО_Запад_2023-07-01-2023-07-07.xls')
+    # book1 = xlwt.Workbook()
+    # book1.save()
+    # with pd.read_excel('TOWest/ТО_Запад_2023-07-01-2023-07-07.xls') as writer:
+    #     print("Читаем книгу с with")
+    # wb = openpyxl.load_workbook('TOWest/ТО_Запад_2023-07-01-2023-07-07.xlsm')
+    # wb.save()
+
+    # wb = xlrd.load_workbook('TOWest/ТО_Запад_2023-07-01-2023-07-07.xls')
+    # writer = pd.ExcelWriter('TOWest/ТО_Запад_2023-07-01-2023-07-07.xlsx', engine='xlsxwriter')
+    # writer = pd.ExcelWriter('TOWest/ТО_Запад_2023-07-01-2023-07-07.xlsx')
+    #
+    # writer.save()
+
+    # Прочитаем таблицу с отчетом
+    # book = pd.read_excel(f"TOWest/ТО_Запад_{name_table}.xls")
+    # TODO Тут надо еще определить название папки
+    # book = pd.read_excel(f"TOWest/ТО_Запад_2023-07-01-2023-07-07.xls")
+    # book = pd.read_excel('TOWest/ТО_Запад_2023-07-01-2023-07-07.xlsx')
+    # # print()
+    #
+    # # Интернет
+    # # internet = int(book.iloc[2, 2])
+    # # internet_refusing = int(book.iloc[1, 6])
+    # # internet_another_date = int(book.iloc[2, 6])
+    # # internet_in_work_co = int(book.iloc[3, 6])
+    # # internet_no_tech = int(book.iloc[5, 6])
+    #
+    # print(book[1:2])
+    # print(book.iloc[2, 2])
+    #
+    # internet = book.iloc[2, 2]
+    # internet_refusing = book.iloc[1, 6]
+    # internet_another_date = book.iloc[2, 6]
+    # internet_in_work_co = book.iloc[3, 6]
+    # internet_no_tech = book.iloc[5, 6]
+    # print(f"Интернет: ")
+    # print(f"Поступило общее: {internet}")
+    # print(f"Отказ: {internet_refusing}")
+    # print(f"На другую дату: {internet_another_date}")
+    # print(f"В работе КО: {internet_in_work_co}")
+    # print(f"НетТехВозм: {internet_no_tech}")
+
+    # ТВ
+    # tv = int(book.iloc[16, 2])
+    # tv_refusing = int(book.iloc[15, 6])
+    # tv_another_date = int(book.iloc[16, 6])
+    # tv_in_work_co = int(book.iloc[17, 6])
+    # print(f"ТВ: ")
+    # print(f"Поступило общее: {tv}")
+    # print(f"Отказ: {tv_refusing}")
+    # print(f"На другую дату: {tv_another_date}")
+    # print(f"В работе КО: {tv_in_work_co}")
+    #
+    # # Домофон
+    # intercom = int(book.iloc[22, 2])
+    # intercom_refusing = int(book.iloc[21, 6])
+    # intercom_another_date = int(book.iloc[22, 6])
+    # intercom_in_work_co = int(book.iloc[23, 6])
+    # print(f"Домофон: ")
+    # print(f"Поступило общее: {intercom}")
+    # print(f"Отказ: {intercom_refusing}")
+    # print(f"На другую дату: {intercom_another_date}")
+    # print(f"В работе КО: {intercom_in_work_co}")
+    #
+    # # Сервис интернет
+    # serv_internet = int(book.iloc[28, 2])
+    # serv_internet_refusing = int(book.iloc[27, 6])
+    # serv_internet_another_date = int(book.iloc[28, 6])
+    # serv_internet_in_work_co = int(book.iloc[29, 6])
+    # print(f"Сервис интернет: ")
+    # print(f"Поступило общее: {serv_internet}")
+    # print(f"Отказ: {serv_internet_refusing}")
+    # print(f"На другую дату: {serv_internet_another_date}")
+    # print(f"В работе КО: {serv_internet_in_work_co}")
+    #
+    # # Сервис ТВ
+    # serv_tv = int(book.iloc[34, 2])
+    # serv_tv_refusing = int(book.iloc[33, 6])
+    # serv_tv_another_date = int(book.iloc[34, 6])
+    # serv_tv_in_work_co = int(book.iloc[35, 6])
+    # print(f"Сервис ТВ: ")
+    # print(f"Поступило "
+    #       f"общее: "
+    #       f"{serv_tv}")
+    # print(f"Отказ: {serv_tv_refusing}")
+    # print(f"На другую дату: {serv_tv_another_date}")
+    # print(f"В работе КО: {serv_tv_in_work_co}")
+
+    # text_to_bot = f"{to}" \
+    #               f"Интернет: " \
+    #               f"Поступило общее: {internet} " \
+    #               f"Отказ: {internet_refusing} " \
+    #               f"На другую дату: {internet_another_date}" \
+    #               f"В работе КО: {internet_in_work_co}" \
+    #               f"НетТехВозм: {internet_no_tech}"
+    #
+    # send_telegram(text_to_bot)
+    pass
+
+
+def week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
+    t_o = "TONorth"
+    t_o_id = 69
+
+    # Список районов, как цикл для перебора и аргумент для ссылки парсеру
+    areas = ["Академический",
+             "Выборгский",
+             "Всеволожский",
+             "Калининский",
+             "Курортный",
+             "Пискаревка",
+             "Приморский"]
+
+    # Массив с датами
+    week = [f"{start_week_day}+-+{first_end_week_day}", f"{second_start_week_day}+-+{end_week_day}"]
+
+    # Запустим парсер по группам
+    answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day),
+                         get_html(t_o_id, "domofon", start_week_day, end_week_day),
+                         get_html(t_o_id, "tv", start_week_day, end_week_day),
+                         get_html(t_o_id, "service", start_week_day, end_week_day),
+                         get_html(t_o_id, "service_tv", start_week_day, end_week_day)]
+
+    # Запустим парсер сайта, каждый раз меняя дату и район(Дата пока одна неделя, но оставим так)
+    # В конфиге есть опция для выключения парсера ГК, ибо с ним долго тестить
+    answer_parser = []
+    if config.gk_need:
+        for area in areas:
+            for days in week:
+                time.sleep(config.delay)  # Небольшая задержка от бана
+                answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
+    answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
+
+    # msg = msg_report.calc_msg_report(answer_parser_all)
+
+    to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
+
+
+def week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
+    t_o = "TOSouth"
+    t_o_id = 70
+
+    # Список районов, как цикл для перебора и аргумент для ссылки парсеру
+
+    areas = ["Гатчинский",
+             "Кировский",
+             "Колпино",
+             "Красносельский",
+             "Ломоносовский",
+             "Московский",
+             "Фрунзенский",
+             "Пушкинский"]
+
+    # Массив с датами
+    week = [f"{start_week_day}+-+{first_end_week_day}", f"{second_start_week_day}+-+{end_week_day}"]
+
+    # Запустим парсер по группам
+    answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day) +
+                         get_html(72, "internet", start_week_day, end_week_day),
+                         get_html(t_o_id, "domofon", start_week_day, end_week_day) +
+                         get_html(72, "domofon", start_week_day, end_week_day),
+                         get_html(t_o_id, "tv", start_week_day, end_week_day) +
+                         get_html(72, "tv", start_week_day, end_week_day),
+                         get_html(t_o_id, "service", start_week_day, end_week_day) +
+                         get_html(72, "service", start_week_day, end_week_day),
+                         get_html(t_o_id, "service_tv", start_week_day, end_week_day) +
+                         get_html(72, "service_tv", start_week_day, end_week_day)]
+
+    # Запустим парсер сайта, каждый раз меняя дату и район(Дата пока одна неделя, но оставим так)
+    # В конфиге есть опция для выключения парсера ГК, ибо с ним долго тестить
+    answer_parser = []
+    if config.gk_need:
+        for area in areas:
+            for days in week:
+                time.sleep(config.delay)  # Небольшая задержка от бана
+                answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
+    answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
+
+    # msg = msg_report.calc_msg_report(answer_parser_all)
+
+    to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
 def week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
@@ -451,8 +654,48 @@ def week_west(name_file_week, start_week_day, first_end_week_day, second_start_w
     if config.gk_need:
         for area in areas:
             for days in week:
+                time.sleep(config.delay)  # Небольшая задержка от бана
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
+
+    # msg = msg_report.calc_msg_report(answer_parser_all)
+
+    to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
+
+
+def week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
+    t_o = "TOEast"
+    t_o_id = 67
+
+    # Список районов, как цикл для перебора и аргумент для ссылки парсеру
+    areas = ["Всеволожский",
+             "Красногвардейский",
+             "Кудрово",
+             "Народный",
+             "Невский",
+             "Рыбацкое"]
+
+    # Массив с датами
+    week = [f"{start_week_day}+-+{first_end_week_day}", f"{second_start_week_day}+-+{end_week_day}"]
+
+    # Запустим парсер по группам
+    answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day),
+                         get_html(t_o_id, "domofon", start_week_day, end_week_day),
+                         get_html(t_o_id, "tv", start_week_day, end_week_day),
+                         get_html(t_o_id, "service", start_week_day, end_week_day),
+                         get_html(t_o_id, "service_tv", start_week_day, end_week_day)]
+
+    # Запустим парсер сайта, каждый раз меняя дату и район(Дата пока одна неделя, но оставим так)
+    # В конфиге есть опция для выключения парсера ГК, ибо с ним долго тестить
+    answer_parser = []
+    if config.gk_need:
+        for area in areas:
+            for days in week:
+                time.sleep(config.delay)  # Небольшая задержка от бана
+                answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
+    answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
+
+    # msg = msg_report.calc_msg_report(answer_parser_all)
 
     to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
@@ -1107,7 +1350,9 @@ def main():
     # В случае теста сразу запустим создание отчета
     if config.global_test:
         # test_timer()  # Тестовая отправка сообщения в телеграм
-        auto_report()
+        # auto_report()
+        auto_report_week()
+        # read_report()
 
     # Автоматический запуск парсера по таймеру.
     # Время запуска берется из конфига(строка)
