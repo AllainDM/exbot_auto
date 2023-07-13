@@ -118,6 +118,7 @@ def create_sessions():
             # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
             print("Сессия Нетаба создана 2")
             # print(response_netup)
+            break
         except ConnectionError:
             print("Ошибка создания сессии")
             time.sleep(180)
