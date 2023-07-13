@@ -11,10 +11,10 @@ from aiogram import Bot, Dispatcher, executor, types
 #     ReplyKeyboardMarkup, KeyboardButton, \
 #     InlineKeyboardMarkup, InlineKeyboardButton
 import requests
-import xlrd
-import xlwt
-import openpyxl
-import pandas as pd
+# import xlrd
+# import xlwt
+# import openpyxl
+# import pandas as pd
 
 from bs4 import BeautifulSoup
 
@@ -432,10 +432,10 @@ def auto_report_week():
             # read_report(name_file_week, "ТО_Запад")
             # read_report()
             # ...
-            send_telegram_file(f"TONorth/ТО_Север_{name_file_week}.xlsx")
-            send_telegram_file(f"TOSouth/ТО_Юг_{name_file_week}.xlsx")
-            send_telegram_file(f"TOWest/ТО_Запад_{name_file_week}.xlsx")
-            send_telegram_file(f"TOEast/ТО_Восток_{name_file_week}.xlsx")
+            send_telegram_file(f"TONorth/ТО_Север_{name_file_week}.xls")
+            send_telegram_file(f"TOSouth/ТО_Юг_{name_file_week}.xls")
+            send_telegram_file(f"TOWest/ТО_Запад_{name_file_week}.xls")
+            send_telegram_file(f"TOEast/ТО_Восток_{name_file_week}.xls")
         except:
             print(f"!!!!!!!!!!! Файл {name_file_week} не найден")
     except FileNotFoundError:
