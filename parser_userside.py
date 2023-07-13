@@ -3,6 +3,7 @@ from datetime import datetime
 import xlrd
 import xlwt
 
+import filtres
 
 # Наши улицы в "совместных" районах
 west_in_moscow = [" Смоленская ул.", " Киевская ул."]
@@ -78,6 +79,11 @@ def save_from_userside(table, t_o):
         street = address[-2][1:-4]
         if address[-2][-2] == 'ш':
             street = address[-2][1:-3]
+
+        # Дальше отфильтруем улицу на лишние слова общим фильтром
+        street = street.strip()
+        street = filtres.cut_street(street)
+
         # street = address[3][1:-4]
         # street = address[-2][1:-3]
         # pars_street = address[3][1:-4].split(" ")
@@ -162,8 +168,14 @@ def save_from_userside(table, t_o):
             one_list.append(date)  # Дата
             one_list.append(pact.rstrip())   # Номер договора
             one_list.append(street)  # Улица
-            one_list.append(address_dom)  # Дом
-            one_list.append(address_kv[-1])  # Квартира
+            try:
+                one_list.append(int(address_dom))  # Дом
+            except ValueError:
+                one_list.append(address_dom)
+            try:
+                one_list.append(int(address_kv[-1]))  # Квартира
+            except ValueError:
+                one_list.append(address_kv[-1])  # Квартира
             one_list.append(soname[0])  # Мастер
             one_list.append(district)  # Район
             one_list.append(" ")  # Метраж
@@ -173,10 +185,20 @@ def save_from_userside(table, t_o):
         elif brend == "Тиера":
             one_list_tiera.append(brend)  # Бренд
             one_list_tiera.append(date)  # Дата
-            one_list_tiera.append(pact.rstrip())  # Номер договора
+            one_list_tiera.append(int(pact.rstrip()))  # Номер договора
             one_list_tiera.append(street)  # Улица
-            one_list_tiera.append(address_dom)  # Дом
-            one_list_tiera.append(address_kv[-1])  # Квартира
+            try:
+                one_list_tiera.append(int(address_dom))  # Дом
+            except ValueError:
+                one_list_tiera.append(address_dom)
+            try:
+                one_list_tiera.append(int(address_kv[-1]))  # Квартира
+            except ValueError:
+                one_list_tiera.append(address_kv[-1])  # Квартира
+
+            # one_list_tiera.append(address_dom)  # Дом
+            # one_list_tiera.append(address_kv[-1])  # Квартира
+
             one_list_tiera.append(soname[0])  # Мастер
             one_list_tiera.append(district)  # Район
             one_list_tiera.append(" ")  # Метраж

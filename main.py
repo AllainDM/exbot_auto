@@ -23,6 +23,7 @@ import to_exel
 import parser_goodscat
 import parser_userside
 import msg_report
+import filtres
 
 session_goodscat = requests.Session()
 session_users = requests.Session()
@@ -992,8 +993,8 @@ def save_from_goodscat_for_day(table, status, date2, area):
         answer = parser_netup(gk_num)
         # Нужно исключить заявки Горохова. Это мастер ИС
         # Будем искать его в определенных районах
-        if area == "Красногвардейский":
-            if answer[1] == "ИС" or answer[1] == "И С":
+        if area == "Красногвардейский" or area == "Невский" or area == "Выборгский":
+            if answer[1] == "ИС" or answer[1] == "И С" or answer[1] == "исс":
                 print(f"answer23451 {answer}")
                 continue
         print(f"answer156 {answer}")
@@ -1005,36 +1006,64 @@ def save_from_goodscat_for_day(table, status, date2, area):
         date1 = f"{date1[2]}.{date1[1]}.{date1[0]}"
         user.append(date1)  # Дата
 
-        user.append(answer[0])  # Договор
+        # Договор
+        try:
+            user.append(int(answer[0]))
+        except ValueError:
+            user.append(answer[0])
 
         # Отдельно берем адрес, заодно уберем лишние пробелы по краям
         address = address_class.text.strip()
         address = address.split(",")
+        # address = str(address)
         # Тут придется вручную отсеивать поселки
         if address[0] == "Парголово" or \
                 address[0] == "Шушары" or \
                 address[0] == "Мурино" or \
                 address[0] == "Песочный" or \
+                address[0] == "Горелово" or \
+                address[0] == "Коммунар" or \
                 address[0] == "Новогорелово":
-            user.append(address[1].strip())  # Адрес. Тут еще раз сразу порежем пробелы по краям
+            street = address[1].strip()
+            # user.append(address[1].strip())  # Адрес. Тут еще раз сразу порежем пробелы по краям
         else:
-            user.append(address[0])  # Адрес
-        user.append(address[-2][2:])  # Адрес. Тут видимо номер дома?
+            street = address[0].strip()
+            # user.append(address[0])  # Адрес
+        # Дальше у улиц уберем лишние слова отдельным модулем для фильтров
+        new_street = filtres.cut_street(street)
+        user.append(new_street)
+        # user.append(street)
+
+        # Адрес. Тут видимо номер дома?
+        try:
+            user.append(int(address[-2][2:]))
+        except ValueError:
+            user.append(address[-2][2:])
+
+        # Адрес. А тут видимо номер квартиры?
         # Необходимо убрать подпись "new" у некоторых квартир
-        address_kv = address[-1][4:]
+        address_kv = (address[-1][4:])
         if len(address_kv) > 3:
             print(f"Подозрение на подпись 'new' у квартиры {address_kv}")
             if address_kv[-3:] == "new":
                 print(f"address_kv[-3:] '{address_kv[-3:]}'. Длинна: {len(address_kv)}")
                 # Дополнительно там идет пробел. Непонятно только всегда ли
-                # if address_kv[0:-4] == " ":
+                #  # if address_kv[0:-4] == " ":
                 user.append(address_kv[0:-4])
-                # else:
-                #     user.append(address_kv[0:-3])
+                # address_kv2 = address_kv[0:-4]
+                #  # else:
+                #  #    user.append(address_kv[0:-3])
             else:
-                user.append(address[-1][4:])  # Адрес. А тут видимо номер квартиры?
+                user.append(address[-1][4:])
+                # address_kv2 = address_kv[-1][4:]
         else:
-            user.append(address[-1][4:])  # Адрес. А тут видимо номер квартиры?
+            user.append(address[-1][4:])
+            # address_kv2 = address_kv[-1][4:]
+
+        # try:
+        #     user.append(int(address_kv2))
+        # except ValueError:
+        #     user.append(address_kv2)
 
         user.append(answer[1])  # Мастер
         user.append(area)  # Район
@@ -1350,8 +1379,8 @@ def main():
     # В случае теста сразу запустим создание отчета
     if config.global_test:
         # test_timer()  # Тестовая отправка сообщения в телеграм
-        # auto_report()
-        auto_report_week()
+        auto_report()
+        # auto_report_week()
         # read_report()
 
     # Автоматический запуск парсера по таймеру.
