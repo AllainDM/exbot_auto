@@ -52,33 +52,34 @@ HEADERS = {
 # Тестово создадим как было
 subprocess.call(['sh', './vpn_up.sh'])
 # Добавим ожидание запуска
-time.sleep(6)
+time.sleep(10)
 #
 data_users = {
     "action": "login",
     "username": config.loginUS,
     "password": config.pswUS
 }
-response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
-# session_users.post(url_login, data=data_users, headers=HEADERS)
-print("Сессия Юзера создана 1")
-
 data_goodscat = {
     "redirect": [1, 1],
     "login": config.login_goodscat,
     "pwd": config.psw_goodscat,
     "auto": "ok",
 }
-response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
-# session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
-print("Сессия ГК создана 1")
-
 data_netup = {
     "login": config.loginUS,
     "password": config.pswUS,
     "phone": "",
     "redirect": "https://billing.athome.pro/"
 }
+
+response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
+# session_users.post(url_login, data=data_users, headers=HEADERS)
+print("Сессия Юзера создана 1")
+
+response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
+# session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
+print("Сессия ГК создана 1")
+
 response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
 # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
 print("Сессия Нетаба создана 1")
@@ -88,7 +89,7 @@ def create_sessions():
     # Подключимся к vpn
     subprocess.call(['sh', './vpn_up.sh'])
     # Добавим ожидание запуска
-    time.sleep(6)
+    time.sleep(10)
 
     global data_users
     global data_goodscat
@@ -102,18 +103,24 @@ def create_sessions():
     global session_goodscat
     global session_netup
 
-    response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
-    # session_users.post(url_login, data=data_users, headers=HEADERS)
-    print("Сессия Юзера создана 2")
+    # По бесконечному циклу запустим создание сессий
+    while True:
+        try:
+            response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
+            # session_users.post(url_login, data=data_users, headers=HEADERS)
+            print("Сессия Юзера создана 2")
 
-    response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
-    # session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
-    print("Сессия ГК создана 2")
+            response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
+            # session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
+            print("Сессия ГК создана 2")
 
-    response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
-    # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
-    print("Сессия Нетаба создана 2")
-    # print(response_netup)
+            response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
+            # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
+            print("Сессия Нетаба создана 2")
+            # print(response_netup)
+        except ConnectionError:
+            print("Ошибка создания сессии")
+            time.sleep(180)
 
 
 # Тестовая функция для проверки даты
