@@ -1056,17 +1056,11 @@ def save_from_goodscat_for_day(table, status, date2, area):
             if address_kv[-3:] == "new":
                 print(f"address_kv[-3:] '{address_kv[-3:]}'. Длинна: {len(address_kv)}")
                 # Дополнительно там идет пробел. Непонятно только всегда ли
-                #  # if address_kv[0:-4] == " ":
-                user.append(address_kv[0:-4])
-                # address_kv2 = address_kv[0:-4]
-                #  # else:
-                #  #    user.append(address_kv[0:-3])
+                user.append(int(address_kv[0:-4]))
             else:
-                user.append(address[-1][4:])
-                # address_kv2 = address_kv[-1][4:]
+                user.append(int(address[-1][4:]))
         else:
-            user.append(address[-1][4:])
-            # address_kv2 = address_kv[-1][4:]
+            user.append(int(address[-1][4:]))
 
         # try:
         #     user.append(int(address_kv2))
@@ -1102,7 +1096,12 @@ def parser_netup(gk_num):
             print(table3[3].text)  # Лицевой счет
             print(table3[81].input['value'])  # Мастер
             print(table3[145].input['value'])  # Метраж
-            answer = [table3[3].text, table3[81].input['value'], table3[145].input['value']]
+            # Отдельно возьмем метраж и попытаемся его преобразовать к числу
+            try:
+                cable = int(table3[145].input['value'])
+            except ValueError:
+                cable = table3[145].input['value']
+            answer = [table3[3].text, table3[81].input['value'], cable]
             return answer
         else:
             print("error")

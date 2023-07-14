@@ -43,8 +43,13 @@ def save_to_exel_from_userside(table_name, arr, t_o):
         ws.write(num_string, 10, i[8])  # Метраж
         num_string += 1
 
+    num_string += 5
+    ws.write(num_string, 1, "20.07.2023")
+    ws.write(num_string + 1, 1, "20/07/2023")
+    ws.write(num_string + 2, 1, "20-07-2023")
+
     date_now = datetime.now()
-    ws.write(0, 0, f"Версия 004 Время: {date_now}")
+    ws.write(0, 0, f"Версия 005 Время: {date_now}")
 
     wb.save(f'{t_o}/{t_o_rus}_{table_name}.xls')
 
