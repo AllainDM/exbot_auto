@@ -1001,10 +1001,10 @@ def save_from_goodscat_for_day(table, status, date2, area):
         answer = parser_netup(gk_num)
         # Нужно исключить заявки Горохова. Это мастер ИС
         # Будем искать его в определенных районах
-        if area == "Красногвардейский" or area == "Невский" or area == "Выборгский":
-            if answer[1] == "ИС" or answer[1] == "И С" or answer[1] == "исс":
-                print(f"answer23451 {answer}")
-                continue
+        # if area == "Красногвардейский" or area == "Невский" or area == "Выборгский":
+        if answer[1] == "ИС" or answer[1] == "И С" or answer[1] == "исс":
+            print(f"answer23451 {answer}")
+            continue
         print(f"answer156 {answer}")
 
         user.append("ЭтХоум")  # Бренд
@@ -1031,6 +1031,7 @@ def save_from_goodscat_for_day(table, status, date2, area):
                 address[0] == "Песочный" or \
                 address[0] == "Горелово" or \
                 address[0] == "Коммунар" or \
+                address[0] == "Колпино" or \
                 address[0] == "Новогорелово":
             street = address[1].strip()
             # user.append(address[1].strip())  # Адрес. Тут еще раз сразу порежем пробелы по краям
@@ -1046,7 +1047,18 @@ def save_from_goodscat_for_day(table, status, date2, area):
         try:
             user.append(int(address[-2][2:]))
         except ValueError:
-            user.append(address[-2][2:])
+            # В случае ошибки там возможно есть * в адресе, ее можно попробовать убрать
+            num_dom = address[-2][2:]
+            num_dom_list = list(num_dom)
+            if "*" in num_dom_list:  # Проверем поиск * в новосозданном списке
+                new_num_dom = num_dom[:-1]
+                # Урежем до -1 символа, и снова попробуем прообразовать с числу
+                try:
+                    user.append(int(new_num_dom))
+                except ValueError:
+                    user.append(new_num_dom)
+            else:
+                user.append(address[-2][2:])
 
         # Адрес. А тут видимо номер квартиры?
         # Необходимо убрать подпись "new" у некоторых квартир
