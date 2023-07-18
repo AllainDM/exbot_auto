@@ -203,7 +203,7 @@ def auto_report():
     print("Дата")
     # Получим дату и рассчитаем на -1 день, то есть за "вчера"
     date_now = datetime.now()
-    start_day = date_now - timedelta(2)  # здесь мы выставляем минус день
+    start_day = date_now - timedelta(1)  # здесь мы выставляем минус день
     date_now = start_day.strftime("%d.%m.%Y")
     date_user = date_now
     # Для Goodscat нужна дата в обратном формате
@@ -1002,7 +1002,10 @@ def save_from_goodscat_for_day(table, status, date2, area):
         # Нужно исключить заявки Горохова. Это мастер ИС
         # Будем искать его в определенных районах
         # if area == "Красногвардейский" or area == "Невский" or area == "Выборгский":
-        if answer[1] == "ИС" or answer[1] == "И С" or answer[1] == "исс":
+        if answer[1] == "ИС" or \
+                answer[1] == "И С" or \
+                answer[1] == "ИИС" or \
+                answer[1] == "исс":
             print(f"answer23451 {answer}")
             continue
         print(f"answer156 {answer}")
@@ -1028,6 +1031,7 @@ def save_from_goodscat_for_day(table, status, date2, area):
         if address[0] == "Парголово" or \
                 address[0] == "Шушары" or \
                 address[0] == "Мурино" or \
+                address[0] == "Кудрово" or \
                 address[0] == "Песочный" or \
                 address[0] == "Горелово" or \
                 address[0] == "Коммунар" or \
