@@ -119,9 +119,9 @@ def create_sessions():
             print("Сессия Нетаба создана 2")
             # print(response_netup)
             break
-        except ConnectionError:
+        except:
             print("Ошибка создания сессии")
-            time.sleep(180)
+            time.sleep(600)
 
 
 # Тестовая функция для проверки даты
