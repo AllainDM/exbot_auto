@@ -66,6 +66,9 @@ def save_from_userside(table, t_o):
         address = address.split(",")
 
         # Отдельно сразу запишем район
+        district_arr = address[2].split(" ")
+        district = district_arr[0]
+
         district = address[2][1:-4]
         # Исключения
         if district == "Кол":
@@ -74,11 +77,22 @@ def save_from_userside(table, t_o):
             district = "Пушкин"
 
         # Разберем улицу, для определения поселков.
-        # !!! Более красиво бы разбить по пробелу и просто найти название
-        # Обычно в конце строки "ул." или "б-р", тоесть 3 символа, но есть варианты с "ш."
-        street = address[-2][1:-4]
-        if address[-2][-2] == 'ш':
-            street = address[-2][1:-3]
+        if address[3] == " Парголово" or \
+                address[3] == " Шушары" or \
+                address[3] == " Мурино" or \
+                address[3] == " Песочный" or \
+                address[3] == " Горелово" or \
+                address[3] == " Коммунар" or \
+                address[3] == " Колпино" or \
+                address[3] == " Новогорелово":
+            street = address[4][1:-4]
+            if address[4][-2] == 'ш':
+                street = address[4][1:-3]
+        else:
+            # Обычно в конце строки "ул." или "б-р", тоесть 3 символа, но есть варианты с "ш."
+            street = address[3][1:-4]
+            if address[3][-2] == 'ш':
+                street = address[3][1:-3]
 
         # Дальше отфильтруем улицу на лишние слова общим фильтром
         street = street.strip()

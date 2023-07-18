@@ -203,7 +203,7 @@ def auto_report():
     print("Дата")
     # Получим дату и рассчитаем на -1 день, то есть за "вчера"
     date_now = datetime.now()
-    start_day = date_now - timedelta(1)  # здесь мы выставляем минус день
+    start_day = date_now - timedelta(2)  # здесь мы выставляем минус день
     date_now = start_day.strftime("%d.%m.%Y")
     date_user = date_now
     # Для Goodscat нужна дата в обратном формате
