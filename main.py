@@ -216,7 +216,7 @@ def auto_report():
 
     # Запустим парсеры для ТО Север, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    day_north(date_user, date_user, date_gk, name_table)
+    # day_north(date_user, date_user, date_gk, name_table)
     # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
     try:
         try:
@@ -229,7 +229,7 @@ def auto_report():
     # Ниже для тестов закроем все кроме севера
     # Запустим парсеры для ТО Юг, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    day_south(date_user, date_user, date_gk, name_table)
+    # day_south(date_user, date_user, date_gk, name_table)
     # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
     try:
         try:
@@ -253,7 +253,7 @@ def auto_report():
 
     # Запустим парсеры для ТО Восток, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    day_east(date_user, date_user, date_gk, name_table)
+    # day_east(date_user, date_user, date_gk, name_table)
     # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
     try:
         try:
@@ -400,21 +400,32 @@ def auto_report_week():
     start_week = 10  # 10 Сколько дней назад началась отчетная неделя
     end_week = 3  # 3 Сколько дней назад закончилась отчетная неделя
 
-    # Так же разделим на два отрезка 4 и 3 дня
+    # Так же разделим на три отрезка 2, 2 и 3 дня
     # Начало недели
     start_week_day = date_now - timedelta(start_week - 1)  # -1 ибо в цикле ниже, считается до, а не включительно
     start_week_day = start_week_day.strftime("%Y-%m-%d")
+    print(start_week_day)
 
     # Конец первого отрезка недели
-    first_end_week_day = date_now - timedelta(end_week + 3)
+    first_end_week_day = date_now - timedelta(start_week - 2)
     first_end_week_day = first_end_week_day.strftime("%Y-%m-%d")
+    print(f"{start_week_day} - {first_end_week_day}")
 
-    second_start_week_day = date_now - timedelta(end_week + 2)
+    second_start_week_day = date_now - timedelta(start_week - 3)
     second_start_week_day = second_start_week_day.strftime("%Y-%m-%d")
+
+    # Конец второго отрезка недели
+    second_end_week_day = date_now - timedelta(start_week - 4)
+    second_end_week_day = second_end_week_day.strftime("%Y-%m-%d")
+    print(f"{second_start_week_day} - {second_end_week_day}")
+
+    third_start_week_day = date_now - timedelta(end_week + 2)
+    third_start_week_day = third_start_week_day.strftime("%Y-%m-%d")
 
     # Конец недели
     end_week_day = date_now - timedelta(end_week)
     end_week_day = end_week_day.strftime("%Y-%m-%d")
+    print(f"{third_start_week_day} - {end_week_day}")
 
     name_file_week = f'{start_week_day}-{end_week_day}'
     print(f'Неделя от {start_week_day} до {end_week_day}')
@@ -425,14 +436,14 @@ def auto_report_week():
 
     # Запустим парсеры, по итогу выполнения функции откроем и вышлем файлы
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
-
-    week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
-
-    week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
-
-    week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day)
-
+    week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+               third_start_week_day, end_week_day)
+    week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+               third_start_week_day, end_week_day)
+    week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+              third_start_week_day, end_week_day)
+    week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+              third_start_week_day, end_week_day)
     # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
     try:
         try:
@@ -556,7 +567,8 @@ def read_report(to="ТО_Запад"):
     pass
 
 
-def week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
+def week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day,
+               second_end_week_day, third_start_week_day, end_week_day):
     t_o = "TONorth"
     t_o_id = 69
 
@@ -570,7 +582,9 @@ def week_north(name_file_week, start_week_day, first_end_week_day, second_start_
              "Приморский"]
 
     # Массив с датами
-    week = [f"{start_week_day}+-+{first_end_week_day}", f"{second_start_week_day}+-+{end_week_day}"]
+    week = [f"{start_week_day}+-+{first_end_week_day}",
+            f"{second_start_week_day}+-+{second_end_week_day}",
+            f"{third_start_week_day}+-+{end_week_day}"]
 
     # Запустим парсер по группам
     answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day),
@@ -589,12 +603,15 @@ def week_north(name_file_week, start_week_day, first_end_week_day, second_start_
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    # msg = msg_report.calc_msg_report(answer_parser_all)
+    msg = msg_report.calc_msg_report(answer_parser_all)
+
+    send_telegram(f"ТО Север: {msg}")
 
     to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
-def week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
+def week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day,
+               second_end_week_day, third_start_week_day, end_week_day):
     t_o = "TOSouth"
     t_o_id = 70
 
@@ -610,7 +627,9 @@ def week_south(name_file_week, start_week_day, first_end_week_day, second_start_
              "Пушкинский"]
 
     # Массив с датами
-    week = [f"{start_week_day}+-+{first_end_week_day}", f"{second_start_week_day}+-+{end_week_day}"]
+    week = [f"{start_week_day}+-+{first_end_week_day}",
+            f"{second_start_week_day}+-+{second_end_week_day}",
+            f"{third_start_week_day}+-+{end_week_day}"]
 
     # Запустим парсер по группам
     answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day) +
@@ -634,12 +653,15 @@ def week_south(name_file_week, start_week_day, first_end_week_day, second_start_
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    # msg = msg_report.calc_msg_report(answer_parser_all)
+    msg = msg_report.calc_msg_report(answer_parser_all)
+
+    send_telegram(f"ТО Юг: {msg}")
 
     to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
-def week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
+def week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day,
+              second_end_week_day, third_start_week_day, end_week_day):
     t_o = "TOWest"
     t_o_id = 68
 
@@ -648,7 +670,9 @@ def week_west(name_file_week, start_week_day, first_end_week_day, second_start_w
              "Петроградский", "Фрунзенский", "Центральный"]
 
     # Массив с датами
-    week = [f"{start_week_day}+-+{first_end_week_day}", f"{second_start_week_day}+-+{end_week_day}"]
+    week = [f"{start_week_day}+-+{first_end_week_day}",
+            f"{second_start_week_day}+-+{second_end_week_day}",
+            f"{third_start_week_day}+-+{end_week_day}"]
 
     # Запустим парсер по группам
     answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day),
@@ -667,12 +691,15 @@ def week_west(name_file_week, start_week_day, first_end_week_day, second_start_w
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    # msg = msg_report.calc_msg_report(answer_parser_all)
+    msg = msg_report.calc_msg_report(answer_parser_all)
+
+    send_telegram(f"ТО Запад: {msg}")
 
     to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
-def week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day, end_week_day):
+def week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day,
+              second_end_week_day, third_start_week_day, end_week_day):
     t_o = "TOEast"
     t_o_id = 67
 
@@ -685,7 +712,9 @@ def week_east(name_file_week, start_week_day, first_end_week_day, second_start_w
              "Рыбацкое"]
 
     # Массив с датами
-    week = [f"{start_week_day}+-+{first_end_week_day}", f"{second_start_week_day}+-+{end_week_day}"]
+    week = [f"{start_week_day}+-+{first_end_week_day}",
+            f"{second_start_week_day}+-+{second_end_week_day}",
+            f"{third_start_week_day}+-+{end_week_day}"]
 
     # Запустим парсер по группам
     answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day),
@@ -704,7 +733,9 @@ def week_east(name_file_week, start_week_day, first_end_week_day, second_start_w
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    # msg = msg_report.calc_msg_report(answer_parser_all)
+    msg = msg_report.calc_msg_report(answer_parser_all)
+
+    send_telegram(f"ТО Восток: {msg}")
 
     to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
@@ -1000,12 +1031,12 @@ def save_from_goodscat_for_day(table, status, date2, area):
         print(f"Запускаем Нетаб, ищем пользователя: {gk_num}")
         answer = parser_netup(gk_num)
         # Нужно исключить заявки Горохова. Это мастер ИС
-        # Будем искать его в определенных районах
-        # if area == "Красногвардейский" or area == "Невский" or area == "Выборгский":
-        if answer[1] == "ИС" or \
-                answer[1] == "И С" or \
-                answer[1] == "ИИС" or \
-                answer[1] == "исс":
+        if answer[1].lower() == "ис" or \
+                answer[1].lower() == "и с" or \
+                answer[1].lower() == "иис" or \
+                answer[1].lower() == "и сс" or \
+                answer[1].lower() == "ии с" or \
+                answer[1].lower() == "исс":
             print(f"answer23451 {answer}")
             continue
         print(f"answer156 {answer}")
@@ -1402,8 +1433,8 @@ def main():
     # В случае теста сразу запустим создание отчета
     if config.global_test:
         # test_timer()  # Тестовая отправка сообщения в телеграм
-        auto_report()
-        # auto_report_week()
+        # auto_report()
+        auto_report_week()
         # read_report()
 
     # Автоматический запуск парсера по таймеру.
