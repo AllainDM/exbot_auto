@@ -23,10 +23,10 @@ def calc_msg_report(table):
     internet_another_date = 0
     for i in table[0]:
         internet += 1
-        if i[1] == "отказ от реализации" \
-                or i[1] == "отказ клиента" \
+        if i[1].lower() == "отказ от реализации" \
+                or i[1].lower() == "отказ клиента" \
                 or i[1] == "НаОтказ" \
-                or i[1] == "Отказ":
+                or i[1].strip() == "Отказ":
             internet_refusing += 1
         elif i[1] == "Отложено" \
                 or i[1] == "Тайм-аут" \
@@ -47,10 +47,10 @@ def calc_msg_report(table):
 
     for i in table[5]:
         internet += 1
-        if i[1] == "отказ от реализации" \
-                or i[1] == "отказ клиента" \
+        if i[1].lower() == "отказ от реализации" \
+                or i[1].lower() == "отказ клиента" \
                 or i[1] == "НаОтказ" \
-                or i[1] == "Отказ":
+                or i[1].strip() == "Отказ":
             internet_refusing += 1
         elif i[1] == "Отложено" \
                 or i[1] == "Тайм-аут" \
@@ -105,8 +105,8 @@ def calc_msg_report(table):
     serv_internet_in_work_co = 0
     for i in table[3]:
         serv_internet += 1
-        if i[1] == "отказ от реализации" \
-                or i[1] == "отказ клиента":
+        if i[1].lower() == "отказ от реализации" \
+                or i[1].lower() == "отказ клиента":
             serv_internet_refusing += 1
         elif i[1] == "пусто":
             serv_internet_another_date += 1
@@ -123,8 +123,8 @@ def calc_msg_report(table):
     serv_tv_in_work_co = 0
     for i in table[4]:
         serv_tv += 1
-        if i[1] == "отказ от реализации" \
-                or i[1] == "отказ клиента":
+        if i[1].lower() == "отказ от реализации" \
+                or i[1].lower() == "отказ клиента":
             serv_tv_refusing += 1
         elif i[1] == "пусто":
             serv_tv_another_date += 1
