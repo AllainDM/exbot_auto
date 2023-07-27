@@ -1033,6 +1033,8 @@ def save_from_goodscat_for_day(table, status, date2, area):
         # Нужно исключить заявки Горохова. Это мастер ИС
         if answer[1].lower() == "ис" or \
                 answer[1].lower() == "и с" or \
+                answer[1].lower() == "и.с" or \
+                answer[1].lower() == "и.с." or \
                 answer[1].lower() == "иис" or \
                 answer[1].lower() == "и сс" or \
                 answer[1].lower() == "ии с" or \
