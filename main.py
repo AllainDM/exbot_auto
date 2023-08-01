@@ -72,17 +72,22 @@ data_netup = {
     "redirect": "https://billing.athome.pro/"
 }
 
-response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
-# session_users.post(url_login, data=data_users, headers=HEADERS)
-print("Сессия Юзера создана 1")
-
-response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
-# session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
-print("Сессия ГК создана 1")
-
-response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
-# session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
-print("Сессия Нетаба создана 1")
+# while True:
+#     try:
+# response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
+# # session_users.post(url_login, data=data_users, headers=HEADERS)
+# print("Сессия Юзера создана 1")
+#
+# response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
+# # session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
+# print("Сессия ГК создана 1")
+#
+# response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
+# # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
+# print("Сессия Нетаба создана 1")
+    # except ConnectionError:
+    #     print("Ошибка создания сессии")
+    #     time.sleep(600)
 
 
 def create_sessions():
@@ -95,9 +100,9 @@ def create_sessions():
     global data_goodscat
     global data_netup
 
-    global response_users
-    global response_goodscat
-    global response_netup
+    # global response_users
+    # global response_goodscat
+    # global response_netup
 
     global session_users
     global session_goodscat
@@ -603,11 +608,14 @@ def week_north(name_file_week, start_week_day, first_end_week_day, second_start_
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    msg = msg_report.calc_msg_report(answer_parser_all)
+    if answer_parser_all[0] is None:
+        print("Где-то произошла ошибка, отчет пустой")
+    else:
+        msg = msg_report.calc_msg_report(answer_parser_all)
 
-    send_telegram(f"ТО Север: {msg}")
+        send_telegram(f"ТО Север: {msg}")
 
-    to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
+        to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
 def week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day,
@@ -632,16 +640,21 @@ def week_south(name_file_week, start_week_day, first_end_week_day, second_start_
             f"{third_start_week_day}+-+{end_week_day}"]
 
     # Запустим парсер по группам
-    answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day) +
-                         get_html(72, "internet", start_week_day, end_week_day),
-                         get_html(t_o_id, "domofon", start_week_day, end_week_day) +
-                         get_html(72, "domofon", start_week_day, end_week_day),
-                         get_html(t_o_id, "tv", start_week_day, end_week_day) +
-                         get_html(72, "tv", start_week_day, end_week_day),
-                         get_html(t_o_id, "service", start_week_day, end_week_day) +
-                         get_html(72, "service", start_week_day, end_week_day),
-                         get_html(t_o_id, "service_tv", start_week_day, end_week_day) +
-                         get_html(72, "service_tv", start_week_day, end_week_day)]
+    try:
+        answer_parser_all = [get_html(t_o_id, "internet", start_week_day, end_week_day) +
+                             get_html(72, "internet", start_week_day, end_week_day),
+                             get_html(t_o_id, "domofon", start_week_day, end_week_day) +
+                             get_html(72, "domofon", start_week_day, end_week_day),
+                             get_html(t_o_id, "tv", start_week_day, end_week_day) +
+                             get_html(72, "tv", start_week_day, end_week_day),
+                             get_html(t_o_id, "service", start_week_day, end_week_day) +
+                             get_html(72, "service", start_week_day, end_week_day),
+                             get_html(t_o_id, "service_tv", start_week_day, end_week_day) +
+                             get_html(72, "service_tv", start_week_day, end_week_day)]
+    except TypeError as e:       # Здесь могут складываться пустые ответы
+        print(f"ТО Юг, произошла ошибка {e}")
+        print("Где-то произошла ошибка, отчет пустой")
+        return
 
     # Запустим парсер сайта, каждый раз меняя дату и район(Дата пока одна неделя, но оставим так)
     # В конфиге есть опция для выключения парсера ГК, ибо с ним долго тестить
@@ -653,11 +666,14 @@ def week_south(name_file_week, start_week_day, first_end_week_day, second_start_
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    msg = msg_report.calc_msg_report(answer_parser_all)
+    if answer_parser_all[0] is None:
+        print("Где-то произошла ошибка, отчет пустой")
+    else:
+        msg = msg_report.calc_msg_report(answer_parser_all)
 
-    send_telegram(f"ТО Юг: {msg}")
+        send_telegram(f"ТО Юг: {msg}")
 
-    to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
+        to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
 def week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day,
@@ -691,11 +707,14 @@ def week_west(name_file_week, start_week_day, first_end_week_day, second_start_w
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    msg = msg_report.calc_msg_report(answer_parser_all)
+    if answer_parser_all[0] is None:
+        print("Где-то произошла ошибка, отчет пустой")
+    else:
+        msg = msg_report.calc_msg_report(answer_parser_all)
 
-    send_telegram(f"ТО Запад: {msg}")
+        send_telegram(f"ТО Запад: {msg}")
 
-    to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
+        to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
 def week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day,
@@ -733,11 +752,14 @@ def week_east(name_file_week, start_week_day, first_end_week_day, second_start_w
                 answer_parser += get_html_goodscat(days, area, t_o)  # Запишем в список ответ парсера за один отрезок
     answer_parser_all.append(answer_parser)  # Добавим отрезок в общий список
 
-    msg = msg_report.calc_msg_report(answer_parser_all)
+    if answer_parser_all[0] is None:
+        print("Где-то произошла ошибка, отчет пустой")
+    else:
+        msg = msg_report.calc_msg_report(answer_parser_all)
 
-    send_telegram(f"ТО Восток: {msg}")
+        send_telegram(f"ТО Восток: {msg}")
 
-    to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
+        to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
 
 # Парсер Юзера, за выбранный период.
@@ -1200,75 +1222,81 @@ def get_html(t_o, mission, start_day, end_day):
                f"task_type2_value%5B%5D=38&task_type2_value%5B%5D=15&filter_selector3=task_division_w_staff&" \
                f"task_division_w_staff3_value={t_o}"
     print(url3)
-    html = session_users.get(url3)
-    answer = []  # Ответ боту
-    list_repairs_id = []  # Тут храним ИД ремонтов
-    if html.status_code == 200:
-        soup = BeautifulSoup(html.text, 'lxml')
-        table = soup.find_all('tr', class_="cursor_pointer")
-        # print(table[0])
-        print(f"Длинна: {len(table)}")
-        for i in table:  # Цикл по списку всей таблицы
-            list_a = i.find_all('a')  # Ищем ссылки во всей таблице
-            for ii in list_a:  # Цикл по найденным ссылкам
-                if len(ii.text) == 6 or len(ii.text) == 7:  # Ищем похожесть на ид ремонта, он пока из 6 цифр
-                    list_repairs_id.append(ii.text)
-        # Перебор полученного списка ремонтов
-        if len(list_repairs_id) > 0:
-            x = 0  # Счетчик индексов новых ремонтов
-            # print(f"list_repairs_id432 {list_repairs_id}")
-            # print(f"table {table[-1]}")
-            for one_repair_id in table:
-                td_class_all = one_repair_id.find_all('td', class_="")
-                # td_class_all = table[x].find_all('td', class_="")
-                # print(td_class_all)
-                td_class_div_center_all = table[x].find_all('td', class_="div_center")
+    try:
+        print("Пробуем скачать страницу")
+        html = session_users.get(url3)
+        answer = []  # Ответ боту
+        list_repairs_id = []  # Тут храним ИД ремонтов
+        print("Проверка ответа")
+        if html.status_code == 200:
+            soup = BeautifulSoup(html.text, 'lxml')
+            table = soup.find_all('tr', class_="cursor_pointer")
+            # print(table[0])
+            print(f"Длинна: {len(table)}")
+            for i in table:  # Цикл по списку всей таблицы
+                list_a = i.find_all('a')  # Ищем ссылки во всей таблице
+                for ii in list_a:  # Цикл по найденным ссылкам
+                    if len(ii.text) == 6 or len(ii.text) == 7:  # Ищем похожесть на ид ремонта, он пока из 6 цифр
+                        list_repairs_id.append(ii.text)
+            # Перебор полученного списка ремонтов
+            if len(list_repairs_id) > 0:
+                x = 0  # Счетчик индексов новых ремонтов
+                # print(f"list_repairs_id432 {list_repairs_id}")
+                # print(f"table {table[-1]}")
+                for one_repair_id in table:
+                    td_class_all = one_repair_id.find_all('td', class_="")
+                    # td_class_all = table[x].find_all('td', class_="")
+                    # print(td_class_all)
+                    td_class_div_center_all = table[x].find_all('td', class_="div_center")
 
-                data_repair = td_class_div_center_all[1]
-                data_repair_text = data_repair.text
-                address_repair = td_class_all[0]
-                address_repair_text = address_repair.text.strip()
-                status = td_class_all[1].find_all('span', class_="")
-                # print(status)
-                # print(f"Длинна статуса: {len(status)}")
-                status_text = ""
-                if status is None or len(status) == 0:
-                    status_text = "пусто"
-                elif len(status) > 2:
-                    status_text = status[-1].text
-                else:
-                    # print(f"Ищем текст в: {status}")
-                    status_text = status[0].text
-                # Разбить статус на массив, чтобы убрать лишнее
-                status_text = status_text.split(":")
-                status_text = status_text[0]
-                # mission_repair = td_class_all[1].b
-                mission_repair_text = td_class_all[1].b.text
+                    data_repair = td_class_div_center_all[1]
+                    data_repair_text = data_repair.text
+                    address_repair = td_class_all[0]
+                    address_repair_text = address_repair.text.strip()
+                    status = td_class_all[1].find_all('span', class_="")
+                    # print(status)
+                    # print(f"Длинна статуса: {len(status)}")
+                    status_text = ""
+                    if status is None or len(status) == 0:
+                        status_text = "пусто"
+                    elif len(status) > 2:
+                        status_text = status[-1].text
+                    else:
+                        # print(f"Ищем текст в: {status}")
+                        status_text = status[0].text
+                    # Разбить статус на массив, чтобы убрать лишнее
+                    status_text = status_text.split(":")
+                    status_text = status_text[0]
+                    # mission_repair = td_class_all[1].b
+                    mission_repair_text = td_class_all[1].b.text
 
-                # Ищем коммент, чтобы отсеивать продажу/аренду при подключении
-                if mission_repair_text == "Прочее задание ФЛ":
-                    comment_repair = table[x].find_all('div', class_="div_journal_opis")
-                    # Комментария может не быть, поэтому делаем проверку
-                    if len(comment_repair) > 0:
-                        comment_repair = comment_repair[0].text
-                        comment_repair = comment_repair.split(" ")
-                        if "при" in comment_repair and "подключении" in comment_repair:
-                            status_text = "Аренда/продажа при подключении"
-                    # else:  # Если коммента нет создаем пустую строку
-                    #     comment_repair = " "
-                    # print(f"comment_repair314: {comment_repair}")
-                # print(f"one_repair_id314: {one_repair_id}")
+                    # Ищем коммент, чтобы отсеивать продажу/аренду при подключении
+                    if mission_repair_text == "Прочее задание ФЛ":
+                        comment_repair = table[x].find_all('div', class_="div_journal_opis")
+                        # Комментария может не быть, поэтому делаем проверку
+                        if len(comment_repair) > 0:
+                            comment_repair = comment_repair[0].text
+                            comment_repair = comment_repair.split(" ")
+                            if "при" in comment_repair and "подключении" in comment_repair:
+                                status_text = "Аренда/продажа при подключении"
+                        # else:  # Если коммента нет создаем пустую строку
+                        #     comment_repair = " "
+                        # print(f"comment_repair314: {comment_repair}")
+                    # print(f"one_repair_id314: {one_repair_id}")
 
-                one = [data_repair_text, status_text, address_repair_text, mission_repair_text]
-                answer.append(one)
+                    one = [data_repair_text, status_text, address_repair_text, mission_repair_text]
+                    answer.append(one)
 
-                x += 1
+                    x += 1
 
-        answer.reverse()
+            answer.reverse()
 
-        return answer
-    else:
-        print("error")
+            return answer
+        else:
+            print("error")
+    except requests.exceptions.TooManyRedirects as e:
+        link = url3  # Заглушка ссылки для ошибки
+        print(f'{link} : {e}')
 
 
 # Для отчета из ГК: неделя, месяц. date это сразу период в нужном формате
@@ -1435,11 +1463,10 @@ def main():
     # Не будем лишний раз этого делать, только непосредственно перед запуском парсера
     # create_sessions()
     # В случае теста сразу запустим создание отчета
-    if config.global_test:
-        # test_timer()  # Тестовая отправка сообщения в телеграм
-        # auto_report()
+    if config.global_test_day:
+        auto_report()
+    if config.global_test_week:
         auto_report_week()
-        # read_report()
 
     # Автоматический запуск парсера по таймеру.
     # Время запуска берется из конфига(строка)
