@@ -72,22 +72,56 @@ data_netup = {
     "redirect": "https://billing.athome.pro/"
 }
 
-# while True:
-#     try:
+
+def create_users_sessions():
+    while True:
+        try:
+            response_users2 = session_users.post(url_login, data=data_users, headers=HEADERS).text
+            # session_users.post(url_login, data=data_users, headers=HEADERS)
+            print("Сессия Юзера создана 2")
+            return response_users2
+        except ConnectionError:
+            print("Ошибка создания сессии")
+            time.sleep(300)
+
+
+response_users = create_users_sessions()
 # response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
-# # session_users.post(url_login, data=data_users, headers=HEADERS)
 # print("Сессия Юзера создана 1")
-#
+
+
+def create_goodscat_sessions():
+    while True:
+        try:
+            response_goodscat2 = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
+            # session_users.post(url_login, data=data_users, headers=HEADERS)
+            print("Сессия Юзера создана 2")
+            return response_goodscat2
+        except ConnectionError:
+            print("Ошибка создания сессии")
+            time.sleep(300)
+
+
+response_goodscat = create_goodscat_sessions()
 # response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
-# # session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
 # print("Сессия ГК создана 1")
-#
+
+
+def create_netup_sessions():
+    while True:
+        try:
+            response_netup2 = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
+            # session_users.post(url_login, data=data_users, headers=HEADERS)
+            print("Сессия Юзера создана 2")
+            return response_netup2
+        except ConnectionError:
+            print("Ошибка создания сессии")
+            time.sleep(300)
+
+
+response_netup = create_netup_sessions()
 # response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
-# # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
 # print("Сессия Нетаба создана 1")
-    # except ConnectionError:
-    #     print("Ошибка создания сессии")
-    #     time.sleep(600)
 
 
 def create_sessions():
@@ -99,10 +133,6 @@ def create_sessions():
     global data_users
     global data_goodscat
     global data_netup
-
-    # global response_users
-    # global response_goodscat
-    # global response_netup
 
     global session_users
     global session_goodscat
