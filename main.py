@@ -251,52 +251,56 @@ def auto_report():
 
     # Запустим парсеры для ТО Север, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    day_north(date_user, date_user, date_gk, name_table)
-    # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
-    try:
+    if config.day_north:
+        day_north(date_user, date_user, date_gk, name_table)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
         try:
-            send_telegram_file(f"TONorth/ТО_Север_{name_table}.xls")
-        except:
-            print(f"Файл {name_table} не найден")
-    except FileNotFoundError:
-        send_telegram(f"Файл {name_table} не найден")
+            try:
+                send_telegram_file(f"TONorth/ТО_Север_{name_table}.xls")
+            except:
+                print(f"Файл {name_table} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_table} не найден")
 
     # Ниже для тестов закроем все кроме севера
     # Запустим парсеры для ТО Юг, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    day_south(date_user, date_user, date_gk, name_table)
-    # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
-    try:
+    if config.day_south:
+        day_south(date_user, date_user, date_gk, name_table)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
         try:
-            send_telegram_file(f"TOSouth/ТО_Юг_{name_table}.xls")
-        except:
-            print(f"Файл {name_table} не найден")
-    except FileNotFoundError:
-        send_telegram(f"Файл {name_table} не найден")
+            try:
+                send_telegram_file(f"TOSouth/ТО_Юг_{name_table}.xls")
+            except:
+                print(f"Файл {name_table} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_table} не найден")
 
     # Запустим парсеры для ТО Запад, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    day_west(date_user, date_user, date_gk, name_table)
-    # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
-    try:
+    if config.day_west:
+        day_west(date_user, date_user, date_gk, name_table)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
         try:
-            send_telegram_file(f"TOWest/ТО_Запад_{name_table}.xls")
-        except:
-            print(f"Файл {name_table} не найден")
-    except FileNotFoundError:
-        send_telegram(f"Файл {name_table} не найден")
+            try:
+                send_telegram_file(f"TOWest/ТО_Запад_{name_table}.xls")
+            except:
+                print(f"Файл {name_table} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_table} не найден")
 
     # Запустим парсеры для ТО Восток, по итогу выполнения функции откроем и вышлем файл
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    day_east(date_user, date_user, date_gk, name_table)
-    # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
-    try:
+    if config.day_east:
+        day_east(date_user, date_user, date_gk, name_table)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
         try:
-            send_telegram_file(f"TOEast/ТО_Восток_{name_table}.xls")
-        except:
-            print(f"Файл {name_table} не найден")
-    except FileNotFoundError:
-        send_telegram(f"Файл {name_table} не найден")
+            try:
+                send_telegram_file(f"TOEast/ТО_Восток_{name_table}.xls")
+            except:
+                print(f"Файл {name_table} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_table} не найден")
 
     # Отключимся от vpn. Необходимо для удаленного доступа к серверу
     subprocess.call(['sh', './vpn_down.sh'])
