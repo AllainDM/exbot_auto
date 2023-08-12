@@ -87,6 +87,9 @@ def save_from_userside(table, t_o):
                 address[3] == " Коммунар" or \
                 address[3] == " Колпино" or \
                 address[3] == " Горская" or \
+                address[3] == " Тельмана" or \
+                address[3] == " Стрельна" or \
+                address[3] == " пос. Стрельна" or \
                 address[3] == " Новогорелово":
             street = address[4][1:-4]
             if address[4][-2] == 'ш':
