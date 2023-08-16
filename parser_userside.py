@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 
 import xlrd
@@ -62,8 +63,18 @@ def save_from_userside(table, t_o):
 
         # В ссылках хранится адрес, ищем ссылки
         list_a = i.find_all('a')  # Ищем ссылки во всей таблице
-        address = list_a[2].text
+        # print(f"list_a {list_a}")
+        # Адрес теперь почему-то может находиться под разным индексом. Будем искать совпадение по длинне
+        address = []
+        for num, el in enumerate(list_a):
+            # print(el.text)
+            if len(el.text) > 10:
+                # print(f"Нужный элемент {el.text} под индексом {num}")
+                address = list_a[num].text
+
+        # print(f"address {list_a[2].text}")
         address = address.split(",")
+        # print(f"address {address}")
 
         # Отдельно сразу запишем район
         district_arr = address[2].split(" ")

@@ -881,8 +881,11 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
         if html.status_code == 200:
             soup = BeautifulSoup(html.text, 'lxml')
             table = soup.find_all('tr', class_="cursor_pointer")
-            answer = parser_userside.save_from_userside(table, t_o)
-            return answer
+            try:
+                answer = parser_userside.save_from_userside(table, t_o)
+                return answer
+            except IndexError:
+                return []
         else:
             print("error")
     except requests.exceptions.TooManyRedirects as e:
