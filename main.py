@@ -1207,15 +1207,35 @@ def parser_netup(gk_num):
             table2 = table1[2]
             table3 = table2.find_all('td', class_="")
             # print(table3)
-            print(table3[3].text)  # Лицевой счет
-            print(table3[81].input['value'])  # Мастер
-            print(table3[145].input['value'])  # Метраж
-            # Отдельно возьмем метраж и попытаемся его преобразовать к числу
-            try:
-                cable = int(table3[145].input['value'])
-            except ValueError:
-                cable = table3[145].input['value']
-            answer = [table3[3].text, table3[81].input['value'], cable]
+            # print(table3[3].text)  # Лицевой счет
+            # print(table3[81].input['value'])  # Мастер
+            # print(table3[145].input['value'])  # Метраж
+            # print(table3[75].input['value'])  # Мастер
+            # print(table3[139].input['value'])  # Метраж
+            # Поскольку ячейки может изменить свое положение, будем искать вручную
+            num_ls = ""
+            monter = ""
+            cable = ""
+            for num, el in enumerate(table3):
+                if el.text == "Номер лицевого счёта:":
+                    num_ls = table3[num + 1].text
+                    print(f"Номер лицевого счёта: {num_ls}")
+                    print(f"Номер ячейки {num}")
+                if el.text == "Монтажник":
+                    monter = table3[num + 1].input['value']
+                    print(f"Монтажник: {monter}")
+                    print(f"Номер ячейки {num}")
+                if el.text == "Метраж кабеля":
+                    cable = table3[num + 1].input['value']
+                    print(f"Метраж кабеля: {cable}")
+                    print(f"Номер ячейки {num}")
+                # Отдельно возьмем метраж и попытаемся его преобразовать к числу
+                    try:
+                        cable = int(cable)
+                    except ValueError:
+                        cable = cable
+            # answer = [table3[3].text, table3[81].input['value'], cable]
+            answer = [num_ls, monter, cable]
             return answer
         else:
             print("error")
