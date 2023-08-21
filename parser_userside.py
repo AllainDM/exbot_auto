@@ -111,6 +111,8 @@ def save_from_userside(table, t_o):
             if address[3][-2] == 'ш':
                 street = address[3][1:-3]
 
+        #
+
         # Дальше отфильтруем улицу на лишние слова общим фильтром
         street = street.strip()
         street = filtres.cut_street(street)
