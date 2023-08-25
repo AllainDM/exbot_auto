@@ -475,29 +475,70 @@ def auto_report_week():
 
     # Запустим парсеры, по итогу выполнения функции откроем и вышлем файлы
     # Вторым аргументом идет вторая дата для периода. Тут же за один день
-    week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
-               third_start_week_day, end_week_day)
-    week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
-               third_start_week_day, end_week_day)
-    week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
-              third_start_week_day, end_week_day)
-    week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
-              third_start_week_day, end_week_day)
-    # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
-    try:
+    if config.week_north:
+        week_north(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+                   third_start_week_day, end_week_day)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
         try:
-            # Попробуем прочитать файл и отдельным сообщение выдать результаты
-            # read_report(name_file_week, "ТО_Запад")
-            # read_report()
-            # ...
-            send_telegram_file(f"TONorth/ТО_Север_{name_file_week}.xls")
-            send_telegram_file(f"TOSouth/ТО_Юг_{name_file_week}.xls")
-            send_telegram_file(f"TOWest/ТО_Запад_{name_file_week}.xls")
-            send_telegram_file(f"TOEast/ТО_Восток_{name_file_week}.xls")
-        except:
-            print(f"!!!!!!!!!!! Файл {name_file_week} не найден")
-    except FileNotFoundError:
-        send_telegram(f"Файл {name_file_week} не найден")
+            try:
+                send_telegram_file(f"TONorth/ТО_Север_{name_file_week}.xls")
+            except:
+                print(f"Файл {name_file_week} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_file_week} не найден")
+
+    if config.week_south:
+        week_south(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+                   third_start_week_day, end_week_day)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
+        try:
+            try:
+                send_telegram_file(f"TOSouth/ТО_Юг_{name_file_week}.xls")
+            except:
+                print(f"Файл {name_file_week} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_file_week} не найден")
+
+    if config.week_west:
+        week_west(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+                  third_start_week_day, end_week_day)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
+        try:
+            try:
+                send_telegram_file(f"TOWest/ТО_Запад_{name_file_week}.xls")
+            except:
+                print(f"Файл {name_file_week} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_file_week} не найден")
+
+    if config.week_east:
+        week_east(name_file_week, start_week_day, first_end_week_day, second_start_week_day, second_end_week_day,
+                  third_start_week_day, end_week_day)
+        # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
+        try:
+            try:
+                send_telegram_file(f"TOEast/ТО_Восток_{name_file_week}.xls")
+            except:
+                print(f"Файл {name_file_week} не найден")
+        except FileNotFoundError:
+            send_telegram(f"Файл {name_file_week} не найден")
+
+    # Сейчас это прописано отдельно для каждого ТО
+    # Два исключения, при ошибке в названии вылетает второе исключение, которое я пока не могу определить
+    # try:
+    #     try:
+    #         # Попробуем прочитать файл и отдельным сообщение выдать результаты
+    #         # read_report(name_file_week, "ТО_Запад")
+    #         # read_report()
+    #         # ...
+    #         send_telegram_file(f"TONorth/ТО_Север_{name_file_week}.xls")
+    #         send_telegram_file(f"TOSouth/ТО_Юг_{name_file_week}.xls")
+    #         send_telegram_file(f"TOWest/ТО_Запад_{name_file_week}.xls")
+    #         send_telegram_file(f"TOEast/ТО_Восток_{name_file_week}.xls")
+    #     except:
+    #         print(f"!!!!!!!!!!! Файл {name_file_week} не найден")
+    # except FileNotFoundError:
+    #     send_telegram(f"Файл {name_file_week} не найден")
 
     # Отключимся от vpn. Необходимо для удаленного доступа к серверу
     subprocess.call(['sh', './vpn_down.sh'])
@@ -645,9 +686,10 @@ def week_north(name_file_week, start_week_day, first_end_week_day, second_start_
     if answer_parser_all[0] is None:
         print("Где-то произошла ошибка, отчет пустой")
     else:
-        msg = msg_report.calc_msg_report(answer_parser_all)
-
-        send_telegram(f"ТО Север: {msg}")
+        # TODO Отчет сообщение пока не доработан
+        # msg = msg_report.calc_msg_report(answer_parser_all)
+        #
+        # send_telegram(f"ТО Север: {msg}")
 
         to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
@@ -703,9 +745,10 @@ def week_south(name_file_week, start_week_day, first_end_week_day, second_start_
     if answer_parser_all[0] is None:
         print("Где-то произошла ошибка, отчет пустой")
     else:
-        msg = msg_report.calc_msg_report(answer_parser_all)
-
-        send_telegram(f"ТО Юг: {msg}")
+        # TODO Отчет сообщение пока не доработан
+        # msg = msg_report.calc_msg_report(answer_parser_all)
+        #
+        # send_telegram(f"ТО Юг: {msg}")
 
         to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
@@ -744,9 +787,10 @@ def week_west(name_file_week, start_week_day, first_end_week_day, second_start_w
     if answer_parser_all[0] is None:
         print("Где-то произошла ошибка, отчет пустой")
     else:
-        msg = msg_report.calc_msg_report(answer_parser_all)
-
-        send_telegram(f"ТО Запад: {msg}")
+        # TODO Отчет сообщение пока не доработан
+        # msg = msg_report.calc_msg_report(answer_parser_all)
+        #
+        # send_telegram(f"ТО Запад: {msg}")
 
         to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
@@ -789,9 +833,10 @@ def week_east(name_file_week, start_week_day, first_end_week_day, second_start_w
     if answer_parser_all[0] is None:
         print("Где-то произошла ошибка, отчет пустой")
     else:
-        msg = msg_report.calc_msg_report(answer_parser_all)
-
-        send_telegram(f"ТО Восток: {msg}")
+        # TODO Отчет сообщение пока не доработан
+        # msg = msg_report.calc_msg_report(answer_parser_all)
+        #
+        # send_telegram(f"ТО Восток: {msg}")
 
         to_exel.save_all_to_exel(name_file_week, answer_parser_all, t_o)
 
@@ -1532,6 +1577,7 @@ def main():
     # Автоматический запуск парсера по таймеру.
     # Время запуска берется из конфига(строка)
     schedule.every().day.at(config.time_for_start_parser).do(auto_report)
+    schedule.every().wednesday.at("06:00").do(auto_report_week)
     while True:
         schedule.run_pending()
 
