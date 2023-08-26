@@ -90,6 +90,7 @@ def save_from_userside(table, t_o):
         # Разберем улицу, для определения поселков.
         if address[3] == " Парголово" or \
                 address[3] == " Шушары" or \
+                address[3] == " Новое Девяткино дер." or \
                 address[3] == " пос. Шушары" or \
                 address[3] == " Кудрово" or \
                 address[3] == " Мурино" or \

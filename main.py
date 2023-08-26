@@ -44,12 +44,7 @@ HEADERS = {
 }
 
 # Глобально создадим обьекты сессий, будем их обновлять перед запуском парсера
-# response_users = None
-# response_goodscat = ""
-# response_netup = ""
 
-# TODO
-# Тестово создадим как было
 subprocess.call(['sh', './vpn_up.sh'])
 # Добавим ожидание запуска
 time.sleep(10)
@@ -238,7 +233,8 @@ def auto_report():
     print("Дата")
     # Получим дату и рассчитаем на -1 день, то есть за "вчера"
     date_now = datetime.now()
-    start_day = date_now - timedelta(1)  # здесь мы выставляем минус день
+
+    start_day = date_now - timedelta(config.days_ago)  # здесь мы выставляем минус день
     date_now = start_day.strftime("%d.%m.%Y")
     date_user = date_now
     # Для Goodscat нужна дата в обратном формате
@@ -1165,8 +1161,10 @@ def save_from_goodscat_for_day(table, status, date2, area):
         address = address.split(",")
         # address = str(address)
         # Тут придется вручную отсеивать поселки
+        # TODO Внимание, это нужно так же прописать в parser_userside.py
         if address[0] == "Парголово" or \
                 address[0] == "Шушары" or \
+                address[0] == "Новое Девяткино" or \
                 address[0] == "Мурино" or \
                 address[0] == "Кудрово" or \
                 address[0] == "Песочный" or \
