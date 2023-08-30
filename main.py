@@ -1171,6 +1171,7 @@ def save_from_goodscat_for_day(table, status, date2, area):
                 address[0] == "Репино" or \
                 address[0] == "Сестрорецк" or \
                 address[0] == "Горелово" or \
+                address[0] == "Понтонный" or \
                 address[0] == "Тельмана" or \
                 address[0] == "Стрельна" or \
                 address[0] == "пос. Стрельна" or \
@@ -1546,6 +1547,9 @@ def get_html_goodscat(date, area, t_o):
         else:
             print("error")
     except requests.exceptions.TooManyRedirects as e:
+        link = url_link  # Заглушка ссылки для ошибки
+        print(f'{link} : {e}')
+    except ConnectionError as e:
         link = url_link  # Заглушка ссылки для ошибки
         print(f'{link} : {e}')
 
