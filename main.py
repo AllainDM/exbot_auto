@@ -77,6 +77,7 @@ def create_users_sessions():
             return response_users2
         except ConnectionError:
             print("Ошибка создания сессии")
+            send_telegram("Ошибка создания сессии UserSide, повтор запроса через 5 минут")
             time.sleep(300)
 
 
@@ -94,6 +95,7 @@ def create_goodscat_sessions():
             return response_goodscat2
         except ConnectionError:
             print("Ошибка создания сессии")
+            send_telegram("Ошибка создания сессии Goodscat, повтор запроса через 5 минут")
             time.sleep(300)
 
 
@@ -111,6 +113,7 @@ def create_netup_sessions():
             return response_netup2
         except ConnectionError:
             print("Ошибка создания сессии")
+            send_telegram("Ошибка создания сессии netup, повтор запроса через 5 минут")
             time.sleep(300)
 
 
