@@ -94,6 +94,8 @@ def save_from_userside(table, t_o):
                 address[3] == " пос. Шушары" or \
                 address[3] == " Кудрово" or \
                 address[3] == " Мурино" or \
+                address[3] == " Репино" or \
+                address[3] == " Сестрорецк" or \
                 address[3] == " Песочный" or \
                 address[3] == " Горелово" or \
                 address[3] == " Коммунар" or \
@@ -114,7 +116,9 @@ def save_from_userside(table, t_o):
             if address[3][-2] == 'ш':
                 street = address[3][1:-3]
 
-        #
+        # Отдельно для Кудрово у ЕТ пропишем район как Кудрово
+        if address[3] == " Кудрово":
+            district = "Кудрово"
 
         # Дальше отфильтруем улицу на лишние слова общим фильтром
         street = street.strip()
