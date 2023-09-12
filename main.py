@@ -4,7 +4,6 @@ import os
 import time
 import schedule
 
-
 from aiogram import Bot, Dispatcher, executor, types
 # from aiogram.dispatcher.filters import Text
 # from aiogram.types import ReplyKeyboardRemove, \
@@ -33,7 +32,6 @@ bot = Bot(token=config.BOT_API_TOKEN)
 dp = Dispatcher(bot)
 
 answ = ()
-
 
 url_login = "http://us.gblnet.net/oper/"
 url_login_goodscat = "https://inet.athome.pro/goodscat/user/authorize/"
@@ -82,6 +80,8 @@ def create_users_sessions():
 
 
 response_users = create_users_sessions()
+
+
 # response_users = session_users.post(url_login, data=data_users, headers=HEADERS).text
 # print("Сессия Юзера создана 1")
 
@@ -100,6 +100,8 @@ def create_goodscat_sessions():
 
 
 response_goodscat = create_goodscat_sessions()
+
+
 # response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
 # print("Сессия ГК создана 1")
 
@@ -118,6 +120,8 @@ def create_netup_sessions():
 
 
 response_netup = create_netup_sessions()
+
+
 # response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
 # print("Сессия Нетаба создана 1")
 
@@ -311,7 +315,13 @@ def auto_report():
 def day_west(start_day, date_now, date_for_goodscat, name_table):
     t_o = "TOWest"  # Название для файла
     t_o_link = "TOWest"  # Для ссылки, иногда требуется сделать два запроса
+    t_o_link2 = "TOWest2"
+    t_o_link3 = "TOWest3"
+    t_o_link4 = "TOWest4"
     answer = get_html_users(date_now, start_day, name_table, t_o, t_o_link)
+    answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link2)
+    answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link3)
+    answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link4)
     # print(answer)
     # Добавим парсер Goodscat
     # Список районов, как цикл для перебора и аргумент для ссылки парсеру
@@ -373,6 +383,7 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
     answer = []
     t_o = "TONorth"  # Название для файла
     t_o_link = "TONorth"  # Для ссылки, иногда требуется сделать два запроса
+    t_o_link2 = "TONorth2"
     # Добавим парсер Goodscat
     # Список районов, как цикл для перебора и аргумент для ссылки парсеру
     areas = ["Академический",
@@ -393,6 +404,7 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
                 answer += get_html_goodscat_for_day(date_for_goodscat, ar, t_o, st)
     # Для севера ЭХ сверху
     answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link)
+    answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link2)
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
 
 
@@ -402,7 +414,9 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
 def day_east(start_day, date_now, date_for_goodscat, name_table):
     t_o = "TOEast"  # Название для файла
     t_o_link = "TOEast"  # Для ссылки, иногда требуется сделать два запроса
+    t_o_link2 = "TOEast2"
     answer = get_html_users(date_now, start_day, name_table, t_o, t_o_link)
+    answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link2)
     # Добавим парсер Goodscat
     # Список районов, как цикл для перебора и аргумент для ссылки парсеру
     areas = ["Всеволожский",
@@ -726,7 +740,7 @@ def week_south(name_file_week, start_week_day, first_end_week_day, second_start_
                              get_html(72, "service", start_week_day, end_week_day),
                              get_html(t_o_id, "service_tv", start_week_day, end_week_day) +
                              get_html(72, "service_tv", start_week_day, end_week_day)]
-    except TypeError as e:       # Здесь могут складываться пустые ответы
+    except TypeError as e:  # Здесь могут складываться пустые ответы
         print(f"ТО Юг, произошла ошибка {e}")
         print("Где-то произошла ошибка, отчет пустой")
         return
@@ -842,82 +856,179 @@ def week_east(name_file_week, start_week_day, first_end_week_day, second_start_w
 
 # Парсер Юзера, за выбранный период.
 def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
-    if t_o_link == "TOWest":
-        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&filter_selector0=adr&" \
-              f"address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
-              f"address_unit_selector0%5B%5D=2267&address_unit_selector0%5B%5D=0&filter_selector1=adr&" \
-              f"address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
-              f"address_unit_selector1%5B%5D=3215&address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
-              f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
-              f"address_unit_selector2%5B%5D=2275&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
-              f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
-              f"address_unit_selector3%5B%5D=2261&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
-              f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
-              f"address_unit_selector4%5B%5D=2264&address_unit_selector4%5B%5D=0&filter_selector5=adr&" \
-              f"address_unit_selector5%5B%5D=421&address_unit_selector5%5B%5D=426&" \
-              f"address_unit_selector5%5B%5D=2276&address_unit_selector5%5B%5D=0&filter_selector6=adr&" \
-              f"address_unit_selector6%5B%5D=421&address_unit_selector6%5B%5D=426&" \
-              f"address_unit_selector6%5B%5D=2269&address_unit_selector6%5B%5D=0&filter_selector7=date_add&" \
-              f"date_add7_value2=1&date_add7_date1={start_day}&date_add7_date2={date_now}&filter_group_by="
+    if t_o_link == "TOWest":  # Районы 2267 3215 2275 2261  2264 2276 2269
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=customer_mark&customer_mark0_value=66&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2267&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=3215&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=2275&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+                   f"address_unit_selector4%5B%5D=2261&address_unit_selector4%5B%5D=0&" \
+                   f"filter_selector5=date_add&date_add5_value2=1&" \
+                   f"date_add5_date1={start_day}+00%3A00&date_add5_date2={date_now}+23%3A59&filter_group_by="
+    elif t_o_link == "TOWest2":
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=customer_mark&customer_mark0_value=66&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2264&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=2276&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=2269&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=date_add&date_add4_value2=1&" \
+                   f"date_add4_date1={start_day}+00%3A00&date_add4_date2={date_now}+23%3A59&filter_group_by="
+    elif t_o_link == "TOWest3":
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=customer_mark&customer_mark0_value=63&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2267&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=3215&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=2275&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+                   f"address_unit_selector4%5B%5D=2261&address_unit_selector4%5B%5D=0&" \
+                   f"filter_selector5=date_add&date_add5_value2=1&" \
+                   f"date_add5_date1={start_day}+00%3A00&date_add5_date2={date_now}+23%3A59&filter_group_by="
+    elif t_o_link == "TOWest4":
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=customer_mark&customer_mark0_value=63&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2264&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=2276&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=2269&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=date_add&date_add4_value2=1&" \
+                   f"date_add4_date1={start_day}+00%3A00&date_add4_date2={date_now}+23%3A59&filter_group_by="
+
+        # Первая моя версия без метки провайдера
+        # t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&filter_selector0=adr&" \
+        #       f"address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
+        #       f"address_unit_selector0%5B%5D=2267&address_unit_selector0%5B%5D=0&filter_selector1=adr&" \
+        #       f"address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+        #       f"address_unit_selector1%5B%5D=3215&address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
+        #       f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+        #       f"address_unit_selector2%5B%5D=2275&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
+        #       f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+        #       f"address_unit_selector3%5B%5D=2261&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
+        #       f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+        #       f"address_unit_selector4%5B%5D=2264&address_unit_selector4%5B%5D=0&filter_selector5=adr&" \
+        #       f"address_unit_selector5%5B%5D=421&address_unit_selector5%5B%5D=426&" \
+        #       f"address_unit_selector5%5B%5D=2276&address_unit_selector5%5B%5D=0&filter_selector6=adr&" \
+        #       f"address_unit_selector6%5B%5D=421&address_unit_selector6%5B%5D=426&" \
+        #       f"address_unit_selector6%5B%5D=2269&address_unit_selector6%5B%5D=0&filter_selector7=date_add&" \
+        #       f"date_add7_value2=1&date_add7_date1={start_day}&date_add7_date2={date_now}&filter_group_by="
 
     elif t_o_link == "TOSouth":
         t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&filter_selector0=date_add&date_add0_value2=1&" \
-              f"date_add0_date1={start_day}&date_add0_date2={date_now}&" \
-              f"filter_selector1=adr&address_unit_selector1%5B%5D=421&" \
-              f"address_unit_selector1%5B%5D=426&address_unit_selector1%5B%5D=2267&" \
-              f"address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
-              f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
-              f"address_unit_selector2%5B%5D=2275&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
-              f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
-              f"address_unit_selector3%5B%5D=2264&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
-              f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
-              f"address_unit_selector4%5B%5D=2266&address_unit_selector4%5B%5D=0&filter_group_by="
+                   f"date_add0_date1={start_day}&date_add0_date2={date_now}&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&" \
+                   f"address_unit_selector1%5B%5D=426&address_unit_selector1%5B%5D=2267&" \
+                   f"address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
+                   f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=2275&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
+                   f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=2264&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
+                   f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+                   f"address_unit_selector4%5B%5D=2266&address_unit_selector4%5B%5D=0&filter_group_by="
 
     elif t_o_link == "TOSouth2":
         t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&filter_selector0=date_add&date_add0_value2=1&" \
-              f"date_add0_date1={start_day}&date_add0_date2={date_now}&" \
-              f"filter_selector1=adr&address_unit_selector1%5B%5D=421&" \
-              f"address_unit_selector1%5B%5D=426&address_unit_selector1%5B%5D=3890&" \
-              f"address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
-              f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
-              f"address_unit_selector2%5B%5D=2234&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
-              f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
-              f"address_unit_selector3%5B%5D=1944&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
-              f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
-              f"address_unit_selector4%5B%5D=2233&address_unit_selector4%5B%5D=0&filter_selector5=adr&" \
-              f"address_unit_selector5%5B%5D=421&address_unit_selector5%5B%5D=426&" \
-              f"address_unit_selector5%5B%5D=2235&address_unit_selector5%5B%5D=0&filter_group_by="
+                   f"date_add0_date1={start_day}&date_add0_date2={date_now}&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&" \
+                   f"address_unit_selector1%5B%5D=426&address_unit_selector1%5B%5D=3890&" \
+                   f"address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
+                   f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=2234&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
+                   f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=1944&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
+                   f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+                   f"address_unit_selector4%5B%5D=2233&address_unit_selector4%5B%5D=0&filter_selector5=adr&" \
+                   f"address_unit_selector5%5B%5D=421&address_unit_selector5%5B%5D=426&" \
+                   f"address_unit_selector5%5B%5D=2235&address_unit_selector5%5B%5D=0&filter_group_by="
 
-    elif t_o_link == "TONorth":
-        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&filter_selector0=adr&" \
-              f"address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
-              f"address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&filter_selector1=adr&" \
-              f"address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
-              f"address_unit_selector1%5B%5D=2232&address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
-              f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
-              f"address_unit_selector2%5B%5D=3229&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
-              f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
-              f"address_unit_selector3%5B%5D=2274&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
-              f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
-              f"address_unit_selector4%5B%5D=3277&address_unit_selector4%5B%5D=2252&" \
-              f"address_unit_selector4%5B%5D=0&" \
-              f"filter_selector5=adr&address_unit_selector5%5B%5D=421&" \
-              f"address_unit_selector5%5B%5D=3253&" \
-              f"address_unit_selector5%5B%5D=3277&address_unit_selector5%5B%5D=10010&" \
-              f"address_unit_selector5%5B%5D=0&" \
-              f"filter_selector6=date_add&" \
-              f"date_add6_value2=1&date_add6_date1={start_day}&date_add6_date2={date_now}&filter_group_by="
+    elif t_o_link == "TONorth":  # 2262 2232 3229 2274 3277 3253
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
+                   f"address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2232&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=3229&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=2274&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+                   f"address_unit_selector4%5B%5D=3277&address_unit_selector4%5B%5D=2252&" \
+                   f"address_unit_selector4%5B%5D=0&" \
+                   f"filter_selector5=adr&address_unit_selector5%5B%5D=421&" \
+                   f"address_unit_selector5%5B%5D=3253&" \
+                   f"address_unit_selector5%5B%5D=3277&address_unit_selector5%5B%5D=10010&" \
+                   f"address_unit_selector5%5B%5D=0&" \
+                   f"filter_selector6=date_add&" \
+                   f"date_add6_value2=1&date_add6_date1={start_day}&date_add6_date2={date_now}&" \
+                   f"filter_selector7=customer_mark&customer_mark7_value=66&" \
+                   f"filter_group_by="
 
-    elif t_o_link == "TOEast":
-        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&filter_selector0=adr&" \
-              f"address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
-              f"address_unit_selector0%5B%5D=2265&address_unit_selector0%5B%5D=0&filter_selector1=adr&" \
-              f"address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
-              f"address_unit_selector1%5B%5D=2268&address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
-              f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=3253&" \
-              f"address_unit_selector2%5B%5D=3277&address_unit_selector2%5B%5D=3411&" \
-              f"address_unit_selector2%5B%5D=0&filter_selector3=date_add&date_add3_value2=1&" \
-              f"date_add3_date1={start_day}&date_add3_date2={date_now}&filter_group_by="
+    elif t_o_link == "TONorth2":  # 2262 2232 3229 2274 3277 3253
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
+                   f"address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2232&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=3229&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=2274&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+                   f"address_unit_selector4%5B%5D=3277&address_unit_selector4%5B%5D=2252&" \
+                   f"address_unit_selector4%5B%5D=0&" \
+                   f"filter_selector5=adr&address_unit_selector5%5B%5D=421&" \
+                   f"address_unit_selector5%5B%5D=3253&" \
+                   f"address_unit_selector5%5B%5D=3277&address_unit_selector5%5B%5D=10010&" \
+                   f"address_unit_selector5%5B%5D=0&" \
+                   f"filter_selector6=date_add&" \
+                   f"date_add6_value2=1&date_add6_date1={start_day}&date_add6_date2={date_now}&" \
+                   f"filter_selector7=customer_mark&customer_mark7_value=63&" \
+                   f"filter_group_by="
+
+    elif t_o_link == "TOEast":  # Районы: 2265 2268 3277
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=customer_mark&customer_mark0_value=66&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2265&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=2268&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=date_add&date_add3_value2=1&" \
+                   f"date_add3_date1={start_day}+00%3A00&date_add3_date2={date_now}+23%3A59&filter_group_by="
+
+        # f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+        # f"address_unit_selector3%5B%5D=3277&address_unit_selector3%5B%5D=0&" \
+
+    elif t_o_link == "TOEast2":  # Районы: 2265 2268 3277
+        t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+                   f"filter_selector0=customer_mark&customer_mark0_value=63&" \
+                   f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+                   f"address_unit_selector1%5B%5D=2265&address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+                   f"address_unit_selector2%5B%5D=2268&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=3277&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=date_add&date_add4_value2=1&" \
+                   f"date_add4_date1={start_day}+00%3A00&date_add4_date2={date_now}+23%3A59&filter_group_by="
+        # Первая моя версия без метки провайдера
+        # t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&filter_selector0=adr&" \
+        #            f"address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
+        #            f"address_unit_selector0%5B%5D=2265&address_unit_selector0%5B%5D=0&filter_selector1=adr&" \
+        #            f"address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+        #            f"address_unit_selector1%5B%5D=2268&address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
+        #            f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=3253&" \
+        #            f"address_unit_selector2%5B%5D=3277&address_unit_selector2%5B%5D=3411&" \
+        #            f"address_unit_selector2%5B%5D=0&filter_selector3=date_add&date_add3_value2=1&" \
+        #            f"date_add3_date1={start_day}&date_add3_date2={date_now}&filter_group_by="
 
     print(t_o_link)
     try:
@@ -1276,7 +1387,7 @@ def parser_netup(gk_num):
                     cable = table3[num + 1].input['value']
                     print(f"Метраж кабеля: {cable}")
                     print(f"Номер ячейки {num}")
-                # Отдельно возьмем метраж и попытаемся его преобразовать к числу
+                    # Отдельно возьмем метраж и попытаемся его преобразовать к числу
                     try:
                         cable = int(cable)
                     except ValueError:
