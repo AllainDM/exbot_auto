@@ -1002,8 +1002,10 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
                    f"address_unit_selector1%5B%5D=2265&address_unit_selector1%5B%5D=0&" \
                    f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
                    f"address_unit_selector2%5B%5D=2268&address_unit_selector2%5B%5D=0&" \
-                   f"filter_selector3=date_add&date_add3_value2=1&" \
-                   f"date_add3_date1={start_day}+00%3A00&date_add3_date2={date_now}+23%3A59&filter_group_by="
+                   f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+                   f"address_unit_selector3%5B%5D=3277&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=date_add&date_add4_value2=1&" \
+                   f"date_add4_date1={start_day}+00%3A00&date_add4_date2={date_now}+23%3A59&filter_group_by="
 
         # f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
         # f"address_unit_selector3%5B%5D=3277&address_unit_selector3%5B%5D=0&" \
