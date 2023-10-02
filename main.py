@@ -1051,15 +1051,6 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
 
 # Парсер ГК для сбора подключений за один(обязательно вчерашний) день
 def get_html_goodscat_for_day(date, area, t_o, status):
-    # Пропишем использование глобальных переменных с сессиями
-    # global response_users
-    # global response_goodscat
-    # global response_netup
-
-    # global session_goodscat
-    # global session_users
-    # global session_netup
-
     url_link = ""  # Ссылка устанавливается в зависимости от выбора района и даты
     if area == "Адмиралтейский":
         if status == "archive":
@@ -1214,7 +1205,7 @@ def get_html_goodscat_for_day(date, area, t_o, status):
                     table = parser_goodscat.street_filter(table, t_o)
             # answer = parser_goodscat.save_from_goodscat_for_day(table, status, date, area)
             # Тестово запускаем из главного файла
-            answer = save_from_goodscat_for_day(table, status, date, area)
+            answer = save_from_goodscat_for_day(table, status, date, area, t_o)
             return answer
         else:
             print("error")
@@ -1225,7 +1216,7 @@ def get_html_goodscat_for_day(date, area, t_o, status):
 
 # Функция сбора подключений из ГК за прошлый день. Различается по статусу
 # Тестово запускаем из главного файла
-def save_from_goodscat_for_day(table, status, date2, area):
+def save_from_goodscat_for_day(table, status, date2, area, t_o):
     arr = []
     print(f'Всего должно быть абонентов {len(table)}')
     for i in table:
@@ -1343,6 +1334,11 @@ def save_from_goodscat_for_day(table, status, date2, area):
 
         user.append(answer[1])  # Мастер
         user.append(area)  # Район
+        # TODO тестово пропустим Всеволожский район для Востока
+        # Кудрово тоже Всеволожский поэтому заранее не могу отключить район
+        # if t_o == "TOEast":
+        #     if area == "Всеволожский":
+        #         continue
         user.append(answer[2])  # Метраж
 
         arr.append(user)  # Добавим итог в общий массив с адресами

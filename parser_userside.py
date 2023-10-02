@@ -77,10 +77,14 @@ def save_from_userside(table, t_o):
         # print(f"address {address}")
 
         # Отдельно сразу запишем район
-        district_arr = address[2].split(" ")
-        district = district_arr[0]
+        # district_arr = address[2].split(" ")
+        # print(f"district_arr {district_arr}")
+        # Почему оно не активно и что это? Тут пустое значение
+        # district = district_arr[0]
+        # print(f"district_arr[0] {district_arr[0]}")
 
-        district = address[2][1:-4]
+        district = address[2][1:-4].strip()
+        # print(f"district = address[2][1:-4] {address[2][1:-4]}")
         # Исключения
         if district == "Кол":
             district = "Колпино"
@@ -119,6 +123,14 @@ def save_from_userside(table, t_o):
         # Отдельно для Кудрово у ЕТ пропишем район как Кудрово
         if address[3] == " Кудрово":
             district = "Кудрово"
+
+        # print(f"t_o {t_o}")
+        # print(f"district {district}")
+        if t_o == "TOEast" and district == "Всеволожский":
+            print(f"ТОВосток и Всеволожский район: {district}")
+            continue
+        # else:
+        #     print(f"НЕ ТОВосток или Всеволожский район: {district}")
 
         # Дальше отфильтруем улицу на лишние слова общим фильтром
         street = street.strip()
@@ -245,7 +257,7 @@ def save_from_userside(table, t_o):
 
             table_list_tiera.append(one_list_tiera)
 
-        # Не добавляем ЭтХоум, он будет браться из другого парсера
+    # Не добавляем ЭтХоум, он будет браться из другого парсера
         # else:  # Остальное видимо относится к ЭтХоуму
         #     one_list_at_home.append(brend)  # Бренд
         #     one_list_at_home.append(date)  # Дата
