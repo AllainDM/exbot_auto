@@ -98,6 +98,7 @@ def save_from_userside(table, t_o):
                 address[3] == " пос. Шушары" or \
                 address[3] == " Кудрово" or \
                 address[3] == " Мурино" or \
+                address[3] == " Бугры пос." or \
                 address[3] == " Репино" or \
                 address[3] == " Сестрорецк" or \
                 address[3] == " Песочный" or \
@@ -128,6 +129,9 @@ def save_from_userside(table, t_o):
         # print(f"district {district}")
         if t_o == "TOEast" and district == "Всеволожский":
             print(f"ТОВосток и Всеволожский район: {district}")
+            continue
+        elif t_o == "TONorth" and district == "Кудрово":
+            print(f"ТОСевер и Кудрово: {district}")
             continue
         # else:
         #     print(f"НЕ ТОВосток или Всеволожский район: {district}")

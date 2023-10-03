@@ -951,7 +951,52 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
                    f"address_unit_selector5%5B%5D=421&address_unit_selector5%5B%5D=426&" \
                    f"address_unit_selector5%5B%5D=2235&address_unit_selector5%5B%5D=0&filter_group_by="
 
-    elif t_o_link == "TONorth":  # 2262 2232 3229 2274 3277 3253
+    # Тут с двумя уточнениями в Выборгском районе, Мурино и Девяткино, а не хватает Бугров
+    # elif t_o_link == "TONorth":  # 2262 2232 3229 2274 3277 3253
+    #     t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+    #                f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
+    #                f"address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&" \
+    #                f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+    #                f"address_unit_selector1%5B%5D=2232&address_unit_selector1%5B%5D=0&" \
+    #                f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+    #                f"address_unit_selector2%5B%5D=3229&address_unit_selector2%5B%5D=0&" \
+    #                f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+    #                f"address_unit_selector3%5B%5D=2274&address_unit_selector3%5B%5D=0&" \
+    #                f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+    #                f"address_unit_selector4%5B%5D=3277&address_unit_selector4%5B%5D=2252&" \
+    #                f"address_unit_selector4%5B%5D=0&" \
+    #                f"filter_selector5=adr&address_unit_selector5%5B%5D=421&" \
+    #                f"address_unit_selector5%5B%5D=3253&" \
+    #                f"address_unit_selector5%5B%5D=3277&address_unit_selector5%5B%5D=10010&" \
+    #                f"address_unit_selector5%5B%5D=0&" \
+    #                f"filter_selector6=date_add&" \
+    #                f"date_add6_value2=1&date_add6_date1={start_day}&date_add6_date2={date_now}&" \
+    #                f"filter_selector7=customer_mark&customer_mark7_value=66&" \
+    #                f"filter_group_by="
+    #
+    # elif t_o_link == "TONorth2":  # 2262 2232 3229 2274 3277 3253
+    #     t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
+    #                f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
+    #                f"address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&" \
+    #                f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426&" \
+    #                f"address_unit_selector1%5B%5D=2232&address_unit_selector1%5B%5D=0&" \
+    #                f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
+    #                f"address_unit_selector2%5B%5D=3229&address_unit_selector2%5B%5D=0&" \
+    #                f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
+    #                f"address_unit_selector3%5B%5D=2274&address_unit_selector3%5B%5D=0&" \
+    #                f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
+    #                f"address_unit_selector4%5B%5D=3277&address_unit_selector4%5B%5D=2252&" \
+    #                f"address_unit_selector4%5B%5D=0&" \
+    #                f"filter_selector5=adr&address_unit_selector5%5B%5D=421&" \
+    #                f"address_unit_selector5%5B%5D=3253&" \
+    #                f"address_unit_selector5%5B%5D=3277&address_unit_selector5%5B%5D=10010&" \
+    #                f"address_unit_selector5%5B%5D=0&" \
+    #                f"filter_selector6=date_add&" \
+    #                f"date_add6_value2=1&date_add6_date1={start_day}&date_add6_date2={date_now}&" \
+    #                f"filter_selector7=customer_mark&customer_mark7_value=63&" \
+    #                f"filter_group_by="
+
+    elif t_o_link == "TONorth111":  # 2262 2232 3229 2274 3277 3253
         t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
                    f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
                    f"address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&" \
@@ -973,7 +1018,39 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
                    f"filter_selector7=customer_mark&customer_mark7_value=66&" \
                    f"filter_group_by="
 
-    elif t_o_link == "TONorth2":  # 2262 2232 3229 2274 3277 3253
+    elif t_o_link == "TONorth":
+        t_o_link = (f"http://us.gblnet.net/oper/?core_section=customer_list&"
+                    f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426"
+                    f"&address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&"
+                    f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426"
+                    f"&address_unit_selector1%5B%5D=2232&address_unit_selector1%5B%5D=0&"
+                    f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426"
+                    f"&address_unit_selector2%5B%5D=3229&address_unit_selector2%5B%5D=0&"
+                    f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&"
+                    f"address_unit_selector3%5B%5D=2274&address_unit_selector3%5B%5D=0&"
+                    f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=3253&"
+                    f"address_unit_selector4%5B%5D=3277&address_unit_selector4%5B%5D=0&"
+                    f"filter_selector6=date_add&date_add6_value2=1&"
+                    f"date_add6_date1={start_day}+00%3A00&date_add6_date2={date_now}+00%3A00&"
+                    f"date_add6_value=&filter_selector7=customer_mark&customer_mark7_value=66&filter_group_by=")
+
+    elif t_o_link == "TONorth2":
+        t_o_link = (f"http://us.gblnet.net/oper/?core_section=customer_list&"
+                    f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426"
+                    f"&address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&"
+                    f"filter_selector1=adr&address_unit_selector1%5B%5D=421&address_unit_selector1%5B%5D=426"
+                    f"&address_unit_selector1%5B%5D=2232&address_unit_selector1%5B%5D=0&"
+                    f"filter_selector2=adr&address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426"
+                    f"&address_unit_selector2%5B%5D=3229&address_unit_selector2%5B%5D=0&"
+                    f"filter_selector3=adr&address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&"
+                    f"address_unit_selector3%5B%5D=2274&address_unit_selector3%5B%5D=0&"
+                    f"filter_selector4=adr&address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=3253&"
+                    f"address_unit_selector4%5B%5D=3277&address_unit_selector4%5B%5D=0&"
+                    f"filter_selector6=date_add&date_add6_value2=1&"
+                    f"date_add6_date1={start_day}+00%3A00&date_add6_date2={date_now}+00%3A00&"
+                    f"date_add6_value=&filter_selector7=customer_mark&customer_mark7_value=63&filter_group_by=")
+
+    elif t_o_link == "TONorth222":  # 2262 2232 3229 2274 3277 3253
         t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
                    f"filter_selector0=adr&address_unit_selector0%5B%5D=421&address_unit_selector0%5B%5D=426&" \
                    f"address_unit_selector0%5B%5D=2262&address_unit_selector0%5B%5D=0&" \
