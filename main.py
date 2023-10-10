@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import os
 import time
 import schedule
+from collections import Counter
 
 from aiogram import Bot, Dispatcher, executor, types
 # from aiogram.dispatcher.filters import Text
@@ -340,8 +341,25 @@ def day_west(start_day, date_now, date_for_goodscat, name_table):
                 answer += answer_gk
                 print(answer_gk)
     print(answer)
-
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
+    # Функционал подсчета адресов
+    list_filter = ["Римского-Корсакова 83-85", "Тосина 6к1", "Петровский 26к2",
+                   "ЖК Галактика:", "Измайловский 9", "Измайловский 11"]
+    new_arr = []
+    for i in answer:
+        str1 = str(i[3]) + ' ' + str(i[4])
+        new_arr.append(str1)
+    coll = Counter(new_arr)
+    test_to_tg = ""
+    print("Делаем перебор коллекции")
+    for i in list_filter:
+        if i in coll:
+            test_to_tg += f"{i} - {coll[i]} \n"
+        elif i[-1] == ":":
+            test_to_tg += f"{i} \n"
+        else:
+            test_to_tg += f"{i} - 0 \n"
+    send_telegram(test_to_tg)
 
 
 # Для ТО Юг
@@ -406,6 +424,25 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
     answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link)
     answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link2)
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
+    # Функционал подсчета адресов
+    list_filter = ["Плесецкая 10", "Плесецкая 14", "Кушелевская 7к1", "Суздальское 18к3", "Суздальское 18к4",
+                   "Прокофьева 7к2", "Комендантский 63", "Комендантский 65", "Белоостровская 28",
+                   "Шоссе в Лаврики 95", "Воронцовский 21", "Тихая 13", "Тихая 17", "Тихая 19"]
+    new_arr = []
+    for i in answer:
+        str1 = str(i[3]) + ' ' + str(i[4])
+        new_arr.append(str1)
+    coll = Counter(new_arr)
+    test_to_tg = ""
+    print("Делаем перебор коллекции")
+    for i in list_filter:
+        if i in coll:
+            test_to_tg += f"{i} - {coll[i]} \n"
+        elif i[-1] == ":":
+            test_to_tg += f"{i} \n"
+        else:
+            test_to_tg += f"{i} - 0 \n"
+    send_telegram(test_to_tg)
 
 
 # Для ТО Восток
@@ -1317,6 +1354,11 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
         # Нужно исключить заявки Горохова. Это мастер ИС
         if answer[1].lower() == "ис" or \
                 answer[1].lower() == "и с" or \
+                answer[1].lower() == "варюшин к.о." or \
+                answer[1].lower() == "варюшин к о" or \
+                answer[1].lower() == "варюшин к.о" or \
+                answer[1].lower() == "варюшин ко" or \
+                answer[1].lower() == "варюшин" or \
                 answer[1].lower() == "и.с" or \
                 answer[1].lower() == "и.с." or \
                 answer[1].lower() == "иис" or \

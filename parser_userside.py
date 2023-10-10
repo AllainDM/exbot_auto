@@ -1,10 +1,12 @@
 import time
+import json
 from datetime import datetime
 
 import xlrd
 import xlwt
 
 import filtres
+import to_json
 
 # Наши улицы в "совместных" районах
 west_in_moscow = [" Смоленская ул.", " Киевская ул."]
@@ -19,6 +21,7 @@ def save_from_userside(table, t_o):
     table_list_et = []  # Список для Е телекома
     table_list_tiera = []  # Список для Тиеры
     table_list_at_home = []  # Список для ЭтХоума
+    dict_to_json = {}
 
     for i in table:
         # e_telecom = "ЕТ"
@@ -102,6 +105,7 @@ def save_from_userside(table, t_o):
                 address[3] == " Репино" or \
                 address[3] == " Сестрорецк" or \
                 address[3] == " Песочный" or \
+                address[3] == " Лисий" or \
                 address[3] == " Горелово" or \
                 address[3] == " Коммунар" or \
                 address[3] == " Колпино" or \
@@ -237,6 +241,9 @@ def save_from_userside(table, t_o):
             one_list.append(" ")  # Метраж
 
             table_list_et.append(one_list)
+
+            # Сохраним в json
+            # dict_to_json[]
 
         elif brend == "Тиера":
             one_list_tiera.append(brend)  # Бренд
