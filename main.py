@@ -1,3 +1,4 @@
+import json
 import subprocess
 from datetime import datetime, timedelta
 import os
@@ -43,10 +44,10 @@ HEADERS = {
 }
 
 # Глобально создадим обьекты сессий, будем их обновлять перед запуском парсера
-
-subprocess.call(['sh', './vpn_up.sh'])
-# Добавим ожидание запуска
-time.sleep(10)
+if config.vpn_need:
+    subprocess.call(['sh', './vpn_up.sh'])
+    # Добавим ожидание запуска
+    time.sleep(10)
 #
 data_users = {
     "action": "login",
@@ -100,6 +101,7 @@ def create_goodscat_sessions():
             time.sleep(300)
 
 
+# if config.vpn_need:
 response_goodscat = create_goodscat_sessions()
 
 
@@ -120,6 +122,7 @@ def create_netup_sessions():
             time.sleep(300)
 
 
+# if config.vpn_need:
 response_netup = create_netup_sessions()
 
 
@@ -129,9 +132,10 @@ response_netup = create_netup_sessions()
 
 def create_sessions():
     # Подключимся к vpn
-    subprocess.call(['sh', './vpn_up.sh'])
-    # Добавим ожидание запуска
-    time.sleep(10)
+    if config.vpn_need:
+        subprocess.call(['sh', './vpn_up.sh'])
+        # Добавим ожидание запуска
+        time.sleep(10)
 
     global data_users
     global data_goodscat
@@ -148,10 +152,12 @@ def create_sessions():
             # session_users.post(url_login, data=data_users, headers=HEADERS)
             print("Сессия Юзера создана 2")
 
+            # if config.vpn_need:
             response_goodscat = session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS).text
             # session_goodscat.post(url_login_goodscat, data=data_goodscat, headers=HEADERS)
             print("Сессия ГК создана 2")
 
+            # if config.vpn_need:
             response_netup = session_netup.post(url_login_netup, data=data_netup, headers=HEADERS).text
             # session_netup.post(url_login_netup, data=data_netup, headers=HEADERS)
             print("Сессия Нетаба создана 2")
@@ -229,9 +235,10 @@ def send_telegram_file(file_name):
 # Получить подключенных абонентов за один день
 def auto_report():
     # Подключимся к vpn
-    subprocess.call(['sh', './vpn_up.sh'])
-    # Добавим ожидание запуска к vpn
-    time.sleep(6)
+    if config.vpn_need:
+        subprocess.call(['sh', './vpn_up.sh'])
+        # Добавим ожидание запуска к vpn
+        time.sleep(6)
     # Создадим сессии, подключимся к биллингам. Подключение к впн идет внутри функции
     create_sessions()
     # Запишем предварительно переменные для сохранения даты
@@ -310,6 +317,71 @@ def auto_report():
     subprocess.call(['sh', './vpn_down.sh'])
 
 
+# Сохранить адреса в json и вывести по фильтру
+def save_connected_houses(answer, t_o, date_now, list_filter):
+    new_arr = []
+    for i in answer:
+        str1 = str(i[3]) + ' ' + str(i[4])
+        new_arr.append(str1)
+    coll = Counter(new_arr)
+    print(f"Тут коллекция: {coll}")
+    # Сохраним коллекцию в json
+    with open(f'{t_o}/list/{date_now}.json', 'w') as file:
+        json.dump(coll, file)
+    # Временный словарь для сохранения количества заявок
+    temp_list = {i: 0 for i in list_filter}
+    # Временный словарь для сохранения количества заявок за последний день
+    # temp_list_day = {i: 0 for i in list_filter}
+    print(f"тут дикт компрешеншон {temp_list}")
+    # Стартовые параметры
+    # TODO удалить
+    with open(f'{t_o}/start_list.json', 'w') as file:
+        json.dump(temp_list, file)
+    # Прочитаем все коллекции в папке
+    files = os.listdir(f"{t_o}/list")
+    for file in files:
+        with open(f'{t_o}/list/{file}', 'r') as f:
+            data = json.load(f)
+            print(f"тут блин data {data}")
+            for k, v in data.items():
+                # print(f"d {k, v}")
+                try:
+                    temp_list[k] += v
+                    # print(f"k {k} {temp_list[k]}")
+                except KeyError:
+                    print(f"Ошибка с {k} {v}")
+
+    # Сделаем в виде списка, ибо придется иногда объединять адреса
+    list_to_tg = []
+    print("Делаем перебор коллекции")
+    for v, k in enumerate(list_filter):
+        if k[-1] == ":":
+            list_to_tg.append(f"{k}\n")
+        # Если в конце скобка, значит нужно объединить несколько адресов
+        elif k[-1] == ")":
+            # Сложим указанное количество у последних элементов
+            # TODO брать 2 последних элемента, нужно будет выделить числа
+            num = int(k[-2])
+            sump = 0
+            sump_coll = 0
+            for s in range(num):
+                sump_coll += coll[list_filter[v-s-1]]
+                sump += temp_list[list_filter[v-s-1]]
+                # print(f"Тут что-то смотрим {list_filter[v-s-1]}")
+            # Удалим последние элементы в списке, отдельным циклом, чтобы не сломать
+            for s in range(num):
+                list_to_tg.pop()
+            list_to_tg.append(f"{k[:-3]} - {sump_coll} ({sump})\n")
+        # Иначе, если адрес не найден, то 0
+        else:
+            try:
+                list_to_tg.append(f"{k} - {coll[k]} ({temp_list[k]})\n")
+            except KeyError:
+                list_to_tg.append(f"{k} - 0 ({temp_list[k]})\n")
+    text_to_tg = " ".join(list_to_tg)
+    send_telegram(text_to_tg)
+
+
 # Для ТО Запад
 # Функция получает дату, запускает парсер циклом, записывает в файл.
 # Вызывающая функция читает и отправляет файл боту
@@ -345,21 +417,28 @@ def day_west(start_day, date_now, date_for_goodscat, name_table):
     # Функционал подсчета адресов
     list_filter = ["Римского-Корсакова 83-85", "Тосина 6к1", "Петровский 26к2",
                    "ЖК Галактика:", "Измайловский 9", "Измайловский 11"]
-    new_arr = []
-    for i in answer:
-        str1 = str(i[3]) + ' ' + str(i[4])
-        new_arr.append(str1)
-    coll = Counter(new_arr)
-    test_to_tg = ""
-    print("Делаем перебор коллекции")
-    for i in list_filter:
-        if i in coll:
-            test_to_tg += f"{i} - {coll[i]} \n"
-        elif i[-1] == ":":
-            test_to_tg += f"{i} \n"
-        else:
-            test_to_tg += f"{i} - 0 \n"
-    send_telegram(test_to_tg)
+    save_connected_houses(answer, t_o, date_now, list_filter)
+    # new_arr = []
+    # for i in answer:
+    #     str1 = str(i[3]) + ' ' + str(i[4])
+    #     new_arr.append(str1)
+    # coll = Counter(new_arr)
+    # # Сделаем в виде списка, ибо придется иногда объединять адреса
+    # list_to_tg = []
+    # print("Делаем перебор коллекции")
+    # for i in list_filter:
+    #     if i in coll:
+    #         list_to_tg.append(f"{i} - {coll[i]} \n")
+    #     # Если в конце стоит ":", то это просто текст, его искать не надо
+    #     elif i[-1] == ":":
+    #         list_to_tg.append(f"{i} \n")
+    #     # Если в конце скобка, значит нужно объединить несколько адресов
+    #     elif i[-1] == ")":
+    #         list_to_tg.append(f"{i} \n")
+    #     # Иначе, если адрес не найден, то 0
+    #     else:
+    #         list_to_tg.append(f"{i} - 0 \n")
+    # text_to_tg = " ".join(list_to_tg)
 
 
 # Для ТО Юг
@@ -393,6 +472,9 @@ def day_south(start_day, date_now, date_for_goodscat, name_table):
 
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
 
+    list_filter = []
+    save_connected_houses(answer, t_o, date_now, list_filter)
+
 
 # Для ТО Север
 # Функция получает дату, запускает парсер циклом, записывает в файл.
@@ -425,42 +507,108 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
     answer += get_html_users(date_now, start_day, name_table, t_o, t_o_link2)
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
     # Функционал подсчета адресов
-    list_filter = ["Плесецкая 10", "Плесецкая 14",
+    list_filter = ["Плесецкая 10", "Плесецкая 14", "Плесецкая 10,14 (2)",
+
                    "Планерная 89к1", "Планерная 91к1",
-                   "Планерная 93к1", "Планерная 95к1",
+                   "Планерная 93к1", "Планерная 95к1", "Планерные (4)",
+
                    "Кушелевская 7к1",
-                   "ЖК Terra:",
-                   "Земледельческая 3", "Студенческая 14к1",
-                   "ЖК Шуваловский:",
+
+                   "Земледельческая 3", "Студенческая 14к1", "ЖК Terra (2)",
+
                    "Лидии Зверевой 3к1", "Лидии Зверевой 3к3",
                    "Лидии Зверевой 5к1", "Лидии Зверевой 9к1",
                    "Лидии Зверевой 9к2", "Парашютная 61к1",
                    "Парашютная 61к3", "Парашютная 61к4",
-                   "Парашютная 65к1",
+                   "Парашютная 65к1", "ЖК Шуваловский (9)",
+
                    "Суздальское 18к3", "Суздальское 18к4",
-                   "ЖК Заповедный парк:",
+
                    "Каменки 19к1", "Каменки 19к3",
                    "Каменки 19к4", "Каменки 17к2",
-                   "Прокофьева 7к2", "Комендантский 63", "Комендантский 65",
+                   "ЖК Заповедный парк (4)",
+
+                   "Прокофьева 7к2",
+
+                   "Комендантский 63", "Комендантский 65",
+                   "Комендантский 63,65 (2)",
+
                    "Белоостровская 28", "Шоссе в Лаврики 95",
-                   "Воронцовский 21к1", "Воронцовский 21к2", "Воронцовский 21к3",
+
+                   "Воронцовский бульвар 21к1", "Воронцовский бульвар 21к2", "Воронцовский бульвар 21к3",
+                   "Воронцовский 21 (3)",
+
                    "Тихая 13", "Тихая 17", "Тихая 19",
-                   "Черной речки 5", "Тихая 3к2", "Красногвардейский 14"]
-    new_arr = []
-    for i in answer:
-        str1 = str(i[3]) + ' ' + str(i[4])
-        new_arr.append(str1)
-    coll = Counter(new_arr)
-    test_to_tg = ""
-    print("Делаем перебор коллекции")
-    for i in list_filter:
-        if i in coll:
-            test_to_tg += f"{i} - {coll[i]} \n"
-        elif i[-1] == ":":
-            test_to_tg += f"{i} \n"
-        else:
-            test_to_tg += f"{i} - 0 \n"
-    send_telegram(test_to_tg)
+                   "Тихая 13,17,19(3)",
+
+                   "Черной речки 5", "Тихая 13к2", "Красногвардейский 14"]
+    save_connected_houses(answer, t_o, date_now, list_filter)
+    # new_arr = []
+    # for i in answer:
+    #     str1 = str(i[3]) + ' ' + str(i[4])
+    #     new_arr.append(str1)
+    # coll = Counter(new_arr)
+    # print(f"Тут коллекция: {coll}")
+    # # Сохраним коллекцию в json
+    # with open(f'{t_o}/list/{date_now}.json', 'w') as file:
+    #     json.dump(coll, file)
+    # # Временный словарь для сохранения количества заявок
+    # temp_list = {i: 0 for i in list_filter}
+    # # Временный словарь для сохранения количества заявок за последний день
+    # temp_list_day = {i: 0 for i in list_filter}
+    # print(f"тут дикт компрешеншон {temp_list}")
+    # # Прочитаем все коллекции в папке
+    # files = os.listdir(f"{t_o}/list")
+    # for file in files:
+    #     with open(f'{t_o}/list/{file}', 'r') as f:
+    #         data = json.load(f)
+    #         print(f"тут блин data {data}")
+    #         for k, v in data.items():
+    #             print(f"d {k, v}")
+    #             try:
+    #                 temp_list[k] += v
+    #                 print(f"k {k} {temp_list[k]}")
+    #                 # print(f"temp_list[k] {temp_list[k]}")
+    #             except KeyError:
+    #                 print(f"Ошибка с {k} {v}")
+    #
+    # # Сделаем в виде списка, ибо придется иногда объединять адреса
+    # list_to_tg = []
+    # print("Делаем перебор коллекции")
+    # for v, k in enumerate(list_filter):
+    #     # print(f"key {k}")
+    #     # if k in coll:
+    #     #     list_to_tg.append(f"{k} - {coll[k]} \n")
+    #     # if k in temp_list:
+    #     # list_to_tg.append(f"{k} - {temp_list[k]} \n")
+    #     # Если в конце стоит ":", то это просто текст, его искать не надо
+    #     # elif k[-1] == ":":
+    #     if k[-1] == ":":
+    #         list_to_tg.append(f"{k} \n")
+    #     # Если в конце скобка, значит нужно объединить несколько адресов
+    #     elif k[-1] == ")":
+    #         # Сложим указанное количество у последних элементов
+    #         # TODO брать 2 последних элемента, нужно будет выделить числа
+    #         num = int(k[-2])
+    #         sump = 0
+    #         sump_coll = 0
+    #         for s in range(num):
+    #             sump_coll += coll[list_filter[v-s-1]]
+    #             sump += temp_list[list_filter[v-s-1]]
+    #             # print(f"Тут что-то смотрим {list_filter[v-s-1]}")
+    #         # Удалим последние элементы в списке, отдельным циклом, чтобы не сломать
+    #         for s in range(num):
+    #             list_to_tg.pop()
+    #         list_to_tg.append(f"{k[:-3]} - {sump_coll} ({sump}) \n")
+    #     # Иначе, если адрес не найден, то 0
+    #     else:
+    #         try:
+    #             list_to_tg.append(f"{k} - {coll[k]} ({temp_list[k]}) \n")
+    #         except KeyError:
+    #             list_to_tg.append(f"{k} - 0 ({temp_list[k]}) \n")
+    #         # list_to_tg.append(f"{k} - 0 \n")
+    # text_to_tg = " ".join(list_to_tg)
+    # send_telegram(text_to_tg)
 
 
 # Для ТО Восток
@@ -491,6 +639,9 @@ def day_east(start_day, date_now, date_for_goodscat, name_table):
                 answer += get_html_goodscat_for_day(date_for_goodscat, ar, t_o, st)
 
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
+
+    list_filter = []
+    save_connected_houses(answer, t_o, date_now, list_filter)
 
 
 # Недельный отчет
@@ -1807,12 +1958,20 @@ def get_html_goodscat(date, area, t_o):
 def create_folder():
     if not os.path.exists(f"TOEast"):
         os.makedirs(f"TOEast")
+    if not os.path.exists(f"TOEast/list"):
+        os.makedirs(f"TOEast/list")
     if not os.path.exists(f"TOWest"):
         os.makedirs(f"TOWest")
+    if not os.path.exists(f"TOWest/list"):
+        os.makedirs(f"TOWest/list")
     if not os.path.exists(f"TONorth"):
         os.makedirs(f"TONorth")
+    if not os.path.exists(f"TONorth/list"):
+        os.makedirs(f"TONorth/list")
     if not os.path.exists(f"TOSouth"):
         os.makedirs(f"TOSouth")
+    if not os.path.exists(f"TOSouth/list"):
+        os.makedirs(f"TOSouth/list")
 
 
 def main():
