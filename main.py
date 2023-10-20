@@ -327,7 +327,7 @@ def save_connected_houses(answer, t_o, date_now, list_filter):
     print(f"Тут коллекция: {coll}")
     # Сохраним коллекцию в json
     with open(f'{t_o}/list/{date_now}.json', 'w') as file:
-        json.dump(coll, file)
+        json.dump(coll, file, sort_keys=False, ensure_ascii=False, indent=4, separators=(',', ': '))
     # Временный словарь для сохранения количества заявок
     temp_list = {i: 0 for i in list_filter}
     # Временный словарь для сохранения количества заявок за последний день
@@ -336,12 +336,12 @@ def save_connected_houses(answer, t_o, date_now, list_filter):
     # Стартовые параметры
     # TODO удалить
     with open(f'{t_o}/start_list.json', 'w') as file:
-        json.dump(temp_list, file)
+        json.dump(temp_list, file, sort_keys=False, ensure_ascii=False, indent=4, separators=(',', ': '))
     # Прочитаем все коллекции в папке
     files = os.listdir(f"{t_o}/list")
     for file in files:
-        with open(f'{t_o}/list/{file}', 'r') as f:
-            data = json.load(f)
+        with open(f'{t_o}/list/{file}', 'r', encoding='utf-8') as f:
+            data = json.loads(f.read())
             print(f"тут блин data {data}")
             for k, v in data.items():
                 # print(f"d {k, v}")
@@ -349,7 +349,8 @@ def save_connected_houses(answer, t_o, date_now, list_filter):
                     temp_list[k] += v
                     # print(f"k {k} {temp_list[k]}")
                 except KeyError:
-                    print(f"Ошибка с {k} {v}")
+                    ...
+                    # print(f"Ошибка с {k} {v}")
 
     # Сделаем в виде списка, ибо придется иногда объединять адреса
     list_to_tg = []
@@ -524,8 +525,8 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
 
                    "Суздальское 18к3", "Суздальское 18к4",
 
-                   "Каменки 19к1", "Каменки 19к3",
-                   "Каменки 19к4", "Каменки 17к2",
+                   "реки Каменки 19к1", "реки Каменки 19к3",
+                   "реки Каменки 19к4", "реки Каменки 17к2",
                    "ЖК Заповедный парк (4)",
 
                    "Прокофьева 7к2",
