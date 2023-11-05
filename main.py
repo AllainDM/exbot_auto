@@ -417,7 +417,7 @@ def day_west(start_day, date_now, date_for_goodscat, name_table):
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
     # Функционал подсчета адресов
     list_filter = ["Римского-Корсакова 83-85", "Тосина 6к1", "Петровский 26к2",
-                   "ЖК Галактика:", "Измайловский 9", "Измайловский 11"]
+                   "ЖК Галактика:", "Измайловский 9", "Измайловский 11", "Прилукская 28А"]
     save_connected_houses(answer, t_o, date_now, list_filter)
     # new_arr = []
     # for i in answer:
