@@ -13,6 +13,8 @@ def cut_street(street):
         new_street = "Петровская коса"
     elif street == "Октябрьская":
         new_street = "Октябрьская наб."
+    elif street == "Волковский пр.":
+        new_street = "Волковский"
 
     else:
         new_street = street

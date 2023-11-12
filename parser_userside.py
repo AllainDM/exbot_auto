@@ -9,7 +9,10 @@ import filtres
 import to_json
 
 # Наши улицы в "совместных" районах
-west_in_moscow = [" Смоленская ул.", " Киевская ул."]
+south_in_moscow = [" Среднерогатская ул.", " Пулковское ш.", " Малая Каштановая ал.",
+                   " Витебский пр.", " Георгия Гречко ул.", " Дунайский пр.", " Звездная ул.",
+                   " Космонавтов пр.", " Меридианная ул.", " Московское ш.", " Орбитальная ул.",
+                   " Орджоникидзе ул.", " Пулковская ул.", " Струве ул.", " Типанова ул.",]
 west_in_frunze = [" Тосина ул.", " Тамбовская ул.", " Расстанная ул."]
 west_in_kirov = [" Канонерский о-в", " Шотландская ул.", " Двинская ул.", " Оборонная ул.",
                  " Севастопольская ул.", " Турбинная ул.", " Гладкова ул.", " Швецова ул."]
@@ -177,49 +180,52 @@ def save_from_userside(table, t_o):
         # Подходит ли улица под ТО, если нет, ниже будет пропуск в цикле
         street_is_norm = True
         if t_o == "TOWest":
-            if district == "Московский":
-                for our_street in west_in_moscow:
-                    if our_street in address:
-                        street_is_norm = True
-                        break
-                    else:
-                        street_is_norm = False
-            elif district == "Фрунзенский":
-                for our_street in west_in_frunze:
-                    if our_street in address:
-                        street_is_norm = True
-                        break
-                    else:
-                        street_is_norm = False
-            elif district == "Кировский":
+            if district == "Кировский":
                 for our_street in west_in_kirov:
+                    # if our_street in address:
                     if our_street in address:
                         street_is_norm = True
                         break
                     else:
                         street_is_norm = False
-        if t_o == "TOSouth":
-            if district == "Фрунзенский":
-                for our_street in west_in_frunze:
-                    if our_street in address:
-                        street_is_norm = False
-                        break
-                    else:
-                        street_is_norm = True
-            elif district == "Кировский":
-                for our_street in west_in_kirov:
-                    if our_street in address:
-                        street_is_norm = False
-                        break
-                    else:
-                        street_is_norm = True
+            # elif district == "Фрунзенский":
+            #     for our_street in west_in_frunze:
+            #         if our_street in address:
+            #             street_is_norm = True
+            #             break
+            #         else:
+            #             street_is_norm = False
             elif district == "Московский":
-                for our_street in west_in_moscow:
+                for our_street in south_in_moscow:
                     if our_street in address:
                         street_is_norm = False
                         break
                     else:
                         street_is_norm = True
+        if t_o == "TOSouth":
+            if district == "Кировский":
+                for our_street in west_in_kirov:
+                    # if our_street in address:
+                    if our_street in address:
+                        street_is_norm = False
+                        break
+                    else:
+                        street_is_norm = True
+            # elif district == "Фрунзенский":
+            #     for our_street in west_in_frunze:
+            #         if our_street in address:
+            #             street_is_norm = False
+            #             break
+            #         else:
+            #             street_is_norm = True
+            elif district == "Московский":
+                for our_street in south_in_moscow:
+                    # if our_street in address:
+                    if our_street in address:
+                        street_is_norm = True
+                        break
+                    else:
+                        street_is_norm = False
         if not street_is_norm:
             continue
 
