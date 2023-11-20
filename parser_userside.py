@@ -12,8 +12,10 @@ import to_json
 south_in_moscow = [" Среднерогатская ул.", " Пулковское ш.", " Малая Каштановая ал.",
                    " Витебский пр.", " Георгия Гречко ул.", " Дунайский пр.", " Звездная ул.",
                    " Космонавтов пр.", " Меридианная ул.", " Московское ш.", " Орбитальная ул.",
-                   " Орджоникидзе ул.", " Пулковская ул.", " Струве ул.", " Типанова ул.",]
-west_in_frunze = [" Тосина ул.", " Тамбовская ул.", " Расстанная ул."]
+                   " Орджоникидзе ул.", " Пулковская ул.", " Струве ул.", " Типанова ул.",
+                   " 1-й Предпортовый пр.", " 2-й Предпортовый пр.", ]
+south_in_frunze = [" Белградская ул.", " Димитрова ул.", " Загребский б-р"
+                   " Малая Каштановая ул.", " Славы пр.", ]
 west_in_kirov = [" Канонерский о-в", " Шотландская ул.", " Двинская ул.", " Оборонная ул.",
                  " Севастопольская ул.", " Турбинная ул.", " Гладкова ул.", " Швецова ул."]
 
@@ -188,13 +190,13 @@ def save_from_userside(table, t_o):
                         break
                     else:
                         street_is_norm = False
-            # elif district == "Фрунзенский":
-            #     for our_street in west_in_frunze:
-            #         if our_street in address:
-            #             street_is_norm = True
-            #             break
-            #         else:
-            #             street_is_norm = False
+            elif district == "Фрунзенский":
+                for our_street in south_in_frunze:
+                    if our_street in address:
+                        street_is_norm = False
+                        break
+                    else:
+                        street_is_norm = True
             elif district == "Московский":
                 for our_street in south_in_moscow:
                     if our_street in address:
@@ -211,13 +213,13 @@ def save_from_userside(table, t_o):
                         break
                     else:
                         street_is_norm = True
-            # elif district == "Фрунзенский":
-            #     for our_street in west_in_frunze:
-            #         if our_street in address:
-            #             street_is_norm = False
-            #             break
-            #         else:
-            #             street_is_norm = True
+            elif district == "Фрунзенский":
+                for our_street in south_in_frunze:
+                    if our_street in address:
+                        street_is_norm = True
+                        break
+                    else:
+                        street_is_norm = False
             elif district == "Московский":
                 for our_street in south_in_moscow:
                     # if our_street in address:

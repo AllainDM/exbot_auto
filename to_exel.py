@@ -95,7 +95,7 @@ def save_all_to_exel(table_name, arr, t_o):
     # ws.write(4, 2, xlwt.Formula('J3+K10'))
 
     ws.write(1, 4, "Доступ")
-    ws.write(1, 6, xlwt.Formula('J2'))
+    ws.write(1, 6, xlwt.Formula('J3'))
     ws.write(2, 4, "Отказ")
     ws.write(2, 6, xlwt.Formula('J4+K11'))
     ws.write(3, 4, "На другую дату")
