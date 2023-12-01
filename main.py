@@ -1553,7 +1553,10 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
         # user.append(td_class_all[1].text)  # 0 = Номер ГК
         gk_num = td_class_all[1].text
         print(f"Запускаем Нетаб, ищем пользователя: {gk_num}")
-        answer = parser_netup(gk_num)
+        try:
+            answer = parser_netup(gk_num)
+        except IndexError:
+            answer = ["Ошибка Нетаба", "Ошибка Нетаба", "Ошибка Нетаба"]
         # Нужно исключить заявки Горохова. Это мастер ИС
         if answer[1].lower() == "ис" or \
                 answer[1].lower() == "и с" or \
