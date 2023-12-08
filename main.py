@@ -574,7 +574,8 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
                    "Шувалова 12",
 
                    "Черной речки 5", "Черной речки 3к2", "Красногвардейский 14",
-                   "ЖК Ривьер Нуар ( 3)"]
+                   "ЖК Ривьер Нуар ( 3)",
+                   "Кондратьевский 39"]
 
     save_connected_houses(answer, t_o, date_now, list_filter)
     # new_arr = []
