@@ -1187,16 +1187,76 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
                    f"date_add0_date1={start_day}&date_add0_date2={date_now}&" \
                    f"filter_selector1=adr&address_unit_selector1%5B%5D=421&" \
                    f"address_unit_selector1%5B%5D=426&address_unit_selector1%5B%5D=3890&" \
-                   f"address_unit_selector1%5B%5D=0&filter_selector2=adr&" \
+                   f"address_unit_selector1%5B%5D=0&" \
+                   f"filter_selector2=adr&" \
                    f"address_unit_selector2%5B%5D=421&address_unit_selector2%5B%5D=426&" \
-                   f"address_unit_selector2%5B%5D=2234&address_unit_selector2%5B%5D=0&filter_selector3=adr&" \
+                   f"address_unit_selector2%5B%5D=2234&address_unit_selector2%5B%5D=0&" \
+                   f"filter_selector3=adr&" \
                    f"address_unit_selector3%5B%5D=421&address_unit_selector3%5B%5D=426&" \
-                   f"address_unit_selector3%5B%5D=1944&address_unit_selector3%5B%5D=0&filter_selector4=adr&" \
+                   f"address_unit_selector3%5B%5D=1944&address_unit_selector3%5B%5D=0&" \
+                   f"filter_selector4=adr&" \
                    f"address_unit_selector4%5B%5D=421&address_unit_selector4%5B%5D=426&" \
-                   f"address_unit_selector4%5B%5D=2233&address_unit_selector4%5B%5D=0&filter_selector5=adr&" \
+                   f"address_unit_selector4%5B%5D=2233&address_unit_selector4%5B%5D=0&" \
+                   f"filter_selector5=adr&" \
                    f"address_unit_selector5%5B%5D=421&address_unit_selector5%5B%5D=426&" \
-                   f"address_unit_selector5%5B%5D=2235&address_unit_selector5%5B%5D=0&filter_group_by="
-
+                   f"address_unit_selector5%5B%5D=2235&address_unit_selector5%5B%5D=0&" \
+                   f"filter_selector6=adr&" \
+                   f"address_unit_selector6%5B%5D=421&address_unit_selector6%5B%5D=426&" \
+                   f"address_unit_selector6%5B%5D=3364&address_unit_selector6%5B%5D=0&" \
+                   f"filter_group_by="
+    # http: // us.gblnet.net / oper /?core_section = customer_list & filter_selector0 = date_add & date_add0_value2 = 1 & date_add0_date1 = 18.12
+    # .2023 + 00 % 3
+    # A00 & date_add0_date2 = 18.12
+    # .2023 + 00 % 3
+    # A00 & date_add0_value = & filter_selector1 = adr & address_unit_selector1 % 5
+    # B % 5
+    # D = 421 & address_unit_selector1 % 5
+    # B % 5
+    # D = 426 & address_unit_selector1 % 5
+    # B % 5
+    # D = 3890 & address_unit_selector1 % 5
+    # B % 5
+    # D = 0 & filter_selector2 = adr & address_unit_selector2 % 5
+    # B % 5
+    # D = 421 & address_unit_selector2 % 5
+    # B % 5
+    # D = 426 & address_unit_selector2 % 5
+    # B % 5
+    # D = 2234 & address_unit_selector2 % 5
+    # B % 5
+    # D = 0 & filter_selector3 = adr & address_unit_selector3 % 5
+    # B % 5
+    # D = 421 & address_unit_selector3 % 5
+    # B % 5
+    # D = 426 & address_unit_selector3 % 5
+    # B % 5
+    # D = 1944 & address_unit_selector3 % 5
+    # B % 5
+    # D = 0 & filter_selector4 = adr & address_unit_selector4 % 5
+    # B % 5
+    # D = 421 & address_unit_selector4 % 5
+    # B % 5
+    # D = 426 & address_unit_selector4 % 5
+    # B % 5
+    # D = 2233 & address_unit_selector4 % 5
+    # B % 5
+    # D = 0 & filter_selector5 = adr & address_unit_selector5 % 5
+    # B % 5
+    # D = 421 & address_unit_selector5 % 5
+    # B % 5
+    # D = 426 & address_unit_selector5 % 5
+    # B % 5
+    # D = 2235 & address_unit_selector5 % 5
+    # B % 5
+    # D = 0 & filter_selector6 = adr & address_unit_selector6 % 5
+    # B % 5
+    # D = 421 & address_unit_selector6 % 5
+    # B % 5
+    # D = 426 & address_unit_selector6 % 5
+    # B % 5
+    # D = 3364 & address_unit_selector6 % 5
+    # B % 5
+    # D = 0 & filter_group_by =
     # Тут с двумя уточнениями в Выборгском районе, Мурино и Девяткино, а не хватает Бугров
     # elif t_o_link == "TONorth":  # 2262 2232 3229 2274 3277 3253
     #     t_o_link = f"http://us.gblnet.net/oper/?core_section=customer_list&" \
@@ -1355,6 +1415,7 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
         #            f"address_unit_selector2%5B%5D=0&filter_selector3=date_add&date_add3_value2=1&" \
         #            f"date_add3_date1={start_day}&date_add3_date2={date_now}&filter_group_by="
 
+    print("t_o_link 111")
     print(t_o_link)
     try:
         html = session_users.get(t_o_link)
@@ -1507,6 +1568,7 @@ def get_html_goodscat_for_day(date, area, t_o, status):
         # !!!! Создать функцию записывающую файл или оправляющую ответ с обьяснением ошибки
         return
 
+    print("url_link 111")
     print(url_link)
     try:
         html = session_goodscat.get(url_link)
@@ -1769,6 +1831,7 @@ def get_html(t_o, mission, start_day, end_day):
                f"task_type2_value%5B%5D=34&task_type2_value%5B%5D=77&task_type2_value%5B%5D=50&" \
                f"task_type2_value%5B%5D=38&task_type2_value%5B%5D=15&filter_selector3=task_division_w_staff&" \
                f"task_division_w_staff3_value={t_o}"
+    print("url3_333")
     print(url3)
     try:
         print("Пробуем скачать страницу")
@@ -1964,6 +2027,7 @@ def get_html_goodscat(date, area, t_o):
         # !!!! Создать функцию записывающую файл или оправляющую ответ с обьяснением ошибки
         return
 
+    print("url_link 222")
     print(url_link)
     try:
         html = session_goodscat.get(url_link)
