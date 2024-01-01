@@ -1742,7 +1742,6 @@ def parser_netup(gk_num):
     # Пропишем использование глобальных переменных с сессиями
     # global session_netup
     # session_netup = requests.Session()
-    # global response_netup
 
     url_link = f"https://billing.athome.pro/payments.php?view={gk_num}&source=inet_dev"
     try:
@@ -1754,12 +1753,7 @@ def parser_netup(gk_num):
             table2 = table1[2]
             table3 = table2.find_all('td', class_="")
             # print(table3)
-            # print(table3[3].text)  # Лицевой счет
-            # print(table3[81].input['value'])  # Мастер
-            # print(table3[145].input['value'])  # Метраж
-            # print(table3[75].input['value'])  # Мастер
-            # print(table3[139].input['value'])  # Метраж
-            # Поскольку ячейки может изменить свое положение, будем искать вручную
+            # Поскольку ячейки могут изменить свое положение после обновления, будем искать вручную
             num_ls = ""
             monter = ""
             cable = ""
@@ -1781,7 +1775,6 @@ def parser_netup(gk_num):
                         cable = int(cable)
                     except ValueError:
                         cable = cable
-            # answer = [table3[3].text, table3[81].input['value'], cable]
             answer = [num_ls, monter, cable]
             return answer
         else:

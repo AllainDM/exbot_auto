@@ -81,6 +81,7 @@ def save_from_userside(table, t_o):
                 address = list_a[num].text
 
         # print(f"address {list_a[2].text}")
+        russia = address.replace(",", " ")
         address = address.split(",")
         # print(f"address {address}")
 
@@ -171,6 +172,31 @@ def save_from_userside(table, t_o):
         #     address_dom = address[5].split()
         #     address_dom = address_dom[0]
         # print(pars_street)
+
+        # Ищем номер дома, при двойном адресе берем номер дома перед "вторым" адресом
+        # russia = address.replace(",", " ")
+        russia = russia.split(" ")
+        print(f"russia {russia}")
+        russia_count = russia.count("Россия")
+        print(f"russia_count {russia_count}")
+
+        address_dom = ""
+
+        if russia_count > 1:
+            count_r = 0
+            for num, el in enumerate(russia):
+                print(f"el: {el}")
+                if el == "Россия" and count_r == 1:
+                    print(f"Найдено второе совпадение, номер элемента: {num}")
+                    address_dom = russia[num - 2]
+                    break
+                elif el == "Россия":
+                    count_r += 1
+        else:
+            address_dom = address[-1].split()
+            print(f"address_dom {address_dom}")
+            address_dom = address_dom[0]
+            print(f"address_dom {address_dom}")
 
         # Отдельно надо разделить номер дома и квартиру
         if address_dom[-1].isdigit():
