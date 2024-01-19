@@ -442,7 +442,7 @@ def day_west(start_day, date_now, date_for_goodscat, name_table):
 
                    "Измайловский 9",
                    "Измайловский 11",
-                   "ЖК Галактика (Измайловский) [2]",
+                   "ЖК Галактика (Измайловский) [ 2]",
                    ]
     save_connected_houses(answer, t_o, date_now, list_filter)
     # new_arr = []
