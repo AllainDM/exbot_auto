@@ -25,6 +25,7 @@ import parser_goodscat
 import parser_userside
 import msg_report
 import filtres
+from for_api import search_brand
 
 session_goodscat = requests.Session()
 session_users = requests.Session()
@@ -1676,7 +1677,20 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
             continue
         print(f"answer156 {answer}")
 
-        user.append("ЭтХоум")  # Бренд
+        # Новая функция определения бренда, ЭтХоум или Невское
+        # new_brand = ""
+        print("################################################")
+        print("Пытаемся вычислить Бренд")
+        try:
+            print(f"int(answer[0]) {int(answer[0])}")
+            new_brand = search_brand(int(answer[0]))
+            print(f"new_brand {new_brand}")
+        except ValueError:
+            print(f"answer[0] {answer[0]}")
+            new_brand = search_brand(answer[0])
+            print(f"new_brand {new_brand}")
+        user.append(new_brand)  # Бренд
+        # user.append("ЭтХоум")  # Бренд
 
         # У даты нужно обрезать время, заменить тире и развернуть
         date1 = date1.split("-")
