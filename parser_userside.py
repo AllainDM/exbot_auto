@@ -118,8 +118,8 @@ def save_from_userside(table, t_o):
                 address[3] == " Бугры пос." or \
                 address[3] == " Репино" or \
                 address[3] == " Сестрорецк" or \
-                address[3] == "Янино-1" or \
-                address[3] == "Янин" or \
+                address[3] == " Янино-1" or \
+                address[3] == " Янин" or \
                 address[3] == " Песочный" or \
                 address[3] == " Лисий" or \
                 address[3] == " Горелово" or \
