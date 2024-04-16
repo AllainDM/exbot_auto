@@ -16,6 +16,8 @@ south_in_moscow = [" Среднерогатская ул.", " Пулковско
                    " 1-й Предпортовый проезд", " 2-й Предпортовый проезд", ]
 south_in_frunze = [" Белградская ул.", " Димитрова ул.", " Загребский б-р",
                    " Малая Каштановая ал.", " Славы пр."]
+west_in_frunze = [" Тосина ул.", " Прилукская ул.", " Тамбовская ул.",
+                  " Расстанная ул.", " Волковский пр."]
 west_in_kirov = [" Канонерский о-в", " Шотландская ул.", " Двинская ул.", " Оборонная ул.",
                  " Севастопольская ул.", " Турбинная ул.", " Гладкова ул.", " Швецова ул."]
 
@@ -254,18 +256,18 @@ def save_from_userside(table, t_o):
             elif district == "Фрунзенский":
                 for our_street in south_in_frunze:
                     if our_street in address:
-                        street_is_norm = True
+                        street_is_norm = False
                         break
                     else:
-                        street_is_norm = False
-            elif district == "Московский":
-                for our_street in south_in_moscow:
-                    # if our_street in address:
-                    if our_street in address:
                         street_is_norm = True
-                        break
-                    else:
-                        street_is_norm = False
+            # elif district == "Московский":
+            #     for our_street in south_in_moscow:
+            #         # if our_street in address:
+            #         if our_street in address:
+            #             street_is_norm = True
+            #             break
+            #         else:
+            #             street_is_norm = False
         if not street_is_norm:
             continue
 
