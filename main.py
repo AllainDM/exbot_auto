@@ -1719,6 +1719,7 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
                 address[0] == " Репино" or \
                 address[0] == " Сестрорецк" or \
                 address[0] == "Янино-1" or \
+                address[0] == "Яни" or \
                 address[0] == " Песочный" or \
                 address[0] == " Лисий" or \
                 address[0] == " Горелово" or \
