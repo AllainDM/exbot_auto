@@ -1710,22 +1710,27 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
         # Тут придется вручную отсеивать поселки
         # TODO Внимание, это нужно так же прописать в parser_userside.py
         if address[0] == "Парголово" or \
-                address[0] == "Шушары" or \
-                address[0] == "Новое Девяткино" or \
-                address[0] == "Мурино" or \
-                address[0] == "Кудрово" or \
-                address[0] == "Песочный" or \
-                address[0] == "Репино" or \
-                address[0] == "Сестрорецк" or \
-                address[0] == "Горелово" or \
-                address[0] == "Понтонный" or \
-                address[0] == "Тельмана" or \
-                address[0] == "Стрельна" or \
-                address[0] == "пос. Стрельна" or \
-                address[0] == "пос. Стре" or \
-                address[0] == "Коммунар" or \
-                address[0] == "Колпино" or \
-                address[0] == "Новогорелово":
+                address[0] == " Шушары" or \
+                address[0] == " Новое Девяткино дер." or \
+                address[0] == " пос. Шушары" or \
+                address[0] == " Кудрово" or \
+                address[0] == " Мурино" or \
+                address[0] == " Бугры пос." or \
+                address[0] == " Репино" or \
+                address[0] == " Сестрорецк" or \
+                address[0] == "Янино-1" or \
+                address[0] == " Песочный" or \
+                address[0] == " Лисий" or \
+                address[0] == " Горелово" or \
+                address[0] == " Коммунар" or \
+                address[0] == " Колпино" or \
+                address[0] == " Горская" or \
+                address[0] == " Понтонный" or \
+                address[0] == " Тельмана" or \
+                address[0] == " Тельмана пос." or \
+                address[0] == " Стрельна" or \
+                address[0] == " пос. Стрельна" or \
+                address[0] == " Новогорелово":
             street = address[1].strip()
             # user.append(address[1].strip())  # Адрес. Тут еще раз сразу порежем пробелы по краям
         else:

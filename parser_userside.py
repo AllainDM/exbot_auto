@@ -101,6 +101,12 @@ def save_from_userside(table, t_o):
             district = "Пушкин"
         elif district == "Ломон":
             district = "Ломоносов"
+            #
+            # if address[0] == "Парголово" or \
+            #         address[0] == "Янино-1" or \
+            #         address[0] == "Коммунар" or \
+            #         address[0] == "Колпино" or \
+            #         address[0] == "Новогорелово":
 
         # Разберем улицу, для определения поселков.
         if address[3] == " Парголово" or \
@@ -112,6 +118,7 @@ def save_from_userside(table, t_o):
                 address[3] == " Бугры пос." or \
                 address[3] == " Репино" or \
                 address[3] == " Сестрорецк" or \
+                address[3] == "Янино-1" or \
                 address[3] == " Песочный" or \
                 address[3] == " Лисий" or \
                 address[3] == " Горелово" or \
