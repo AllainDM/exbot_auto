@@ -87,13 +87,6 @@ def save_from_userside(table, t_o):
         address = address.split(",")
         # print(f"address {address}")
 
-        # Отдельно сразу запишем район
-        # district_arr = address[2].split(" ")
-        # print(f"district_arr {district_arr}")
-        # Почему оно не активно и что это? Тут пустое значение
-        # district = district_arr[0]
-        # print(f"district_arr[0] {district_arr[0]}")
-
         district = address[2][1:-4].strip()
         # print(f"district = address[2][1:-4] {address[2][1:-4]}")
         # Исключения
@@ -103,12 +96,6 @@ def save_from_userside(table, t_o):
             district = "Пушкин"
         elif district == "Ломон":
             district = "Ломоносов"
-            #
-            # if address[0] == "Парголово" or \
-            #         address[0] == "Янино-1" or \
-            #         address[0] == "Коммунар" or \
-            #         address[0] == "Колпино" or \
-            #         address[0] == "Новогорелово":
 
         # Разберем улицу, для определения поселков.
         if address[3] == " Парголово" or \
@@ -133,7 +120,7 @@ def save_from_userside(table, t_o):
                 address[3] == " Тельмана пос." or \
                 address[3] == " Стрельна" or \
                 address[3] == " пос. Стрельна" or \
-                address[3] == " Новогорелово":
+                address[3] == " Новогорелово пос.":
             street = address[4][1:-4]
             if address[4][-2] == 'ш':
                 street = address[4][1:-3]
@@ -162,51 +149,33 @@ def save_from_userside(table, t_o):
         street = street.strip()
         street = filtres.cut_street(street)
 
-        # street = address[3][1:-4]
-        # street = address[-2][1:-3]
-        # pars_street = address[3][1:-4].split(" ")
-        # pars_street = address[-2][1:-4]
-
-        # address_dom = address[4].split()
         address_dom = address[-1].split()
         address_dom = address_dom[0]
-
-        # Если поселок, то все сьезжает
-        # if "пос." in pars_street or \
-        #         "Куд" in pars_street or \
-        #         "Му" in pars_street or \
-        #         "Парго" in pars_street or \
-        #         "Девяткино" in pars_street:
-        #     # street = address[4][1:-4]
-        #     street = address[-2][1:-4]
-        #     address_dom = address[5].split()
-        #     address_dom = address_dom[0]
-        # print(pars_street)
 
         # Ищем номер дома, при двойном адресе берем номер дома перед "вторым" адресом
         # russia = address.replace(",", " ")
         russia = russia.split(" ")
-        print(f"russia {russia}")
+        # print(f"russia {russia}")
         russia_count = russia.count("Россия")
-        print(f"russia_count {russia_count}")
+        # print(f"russia_count {russia_count}")
 
         address_dom = ""
 
         if russia_count > 1:
             count_r = 0
             for num, el in enumerate(russia):
-                print(f"el: {el}")
+                # print(f"el: {el}")
                 if el == "Россия" and count_r == 1:
-                    print(f"Найдено второе совпадение, номер элемента: {num}")
+                    # print(f"Найдено второе совпадение, номер элемента: {num}")
                     address_dom = russia[num - 2]
                     break
                 elif el == "Россия":
                     count_r += 1
         else:
             address_dom = address[-1].split()
-            print(f"address_dom {address_dom}")
+            # print(f"address_dom {address_dom}")
             address_dom = address_dom[0]
-            print(f"address_dom {address_dom}")
+            # print(f"address_dom {address_dom}")
 
         # Отдельно надо разделить номер дома и квартиру
         if address_dom[-1].isdigit():

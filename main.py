@@ -1706,37 +1706,52 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
         # Отдельно берем адрес, заодно уберем лишние пробелы по краям
         address = address_class.text.strip()
         address = address.split(",")
+        address_street = address[0].strip()
+        print("#############################")
+        print(f"address {address}")
         # address = str(address)
         # Тут придется вручную отсеивать поселки
         # TODO Внимание, это нужно так же прописать в parser_userside.py
-        if address[0] == "Парголово" or \
-                address[0] == " Шушары" or \
-                address[0] == " Новое Девяткино дер." or \
-                address[0] == " пос. Шушары" or \
-                address[0] == " Кудрово" or \
-                address[0] == " Мурино" or \
-                address[0] == " Бугры пос." or \
-                address[0] == " Репино" or \
-                address[0] == " Сестрорецк" or \
-                address[0] == " Янино-1" or \
-                address[0] == " Янин" or \
-                address[0] == " Песочный" or \
-                address[0] == " Лисий" or \
-                address[0] == " Горелово" or \
-                address[0] == " Коммунар" or \
-                address[0] == " Колпино" or \
-                address[0] == " Горская" or \
-                address[0] == " Понтонный" or \
-                address[0] == " Тельмана" or \
-                address[0] == " Тельмана пос." or \
-                address[0] == " Стрельна" or \
-                address[0] == " пос. Стрельна" or \
-                address[0] == " Новогорелово":
+        # if address_street[0] == "Парголово" or \
+        #         address_street[0] == " Шушары" or \
+        #         address_street[0] == " Новое Девяткино дер." or \
+        #         address_street[0] == " пос. Шушары" or \
+        #         address_street[0] == " Кудрово" or \
+        #         address_street[0] == " Мурино" or \
+        #         address_street[0] == " Бугры пос." or \
+        #         address_street[0] == " Репино" or \
+        #         address_street[0] == " Сестрорецк" or \
+        #         address_street[0] == " Янино-1" or \
+        #         address_street[0] == " Янин" or \
+        #         address[0] == " Песочный" or \
+        #         address[0] == " Лисий" or \
+        #         address[0] == " Горелово" or \
+        #         address[0] == " Коммунар" or \
+        #         address[0] == " Колпино" or \
+        #         address[0] == "Колпино" or \
+        #         address[0] == " Горская" or \
+        #         address[0] == " Понтонный" or \
+        #         address[0] == " Тельмана" or \
+        #         address[0] == " Тельмана пос." or \
+        #         address[0] == " Стрельна" or \
+        #         address[0] == " пос. Стрельна" or \
+        #         address[0] == " Новогорелово пос.":
+        # TODO Внимание, это нужно так же прописать в parser_userside.py
+        # TODO перенести в отдельный модуль хотя бы списки
+        list_villages = ["Парголово", "Шушары", "Новое Девяткино дер.", "пос. Шушары",
+                         "Кудрово", "Мурино", "Бугры пос.", "Репино", "Сестрорецк",
+                         "Янино-1", "Песочный", "Лисий", "Горелово", "Коммунар",
+                         "Колпино", "Горская", "Понтонный", "Тельмана пос.",
+                         "пос. Стрельна",]
+
+        list_district = ["Колпинский р-н", "Ломоносовский р-н", "Всеволожский р-н"]
+
+        if address_street in list_villages:
             street = address[1].strip()
-            # user.append(address[1].strip())  # Адрес. Тут еще раз сразу порежем пробелы по краям
+        elif address_street in list_district:
+            street = address[2].strip()
         else:
             street = address[0].strip()
-            # user.append(address[0])  # Адрес
         # Дальше у улиц уберем лишние слова отдельным модулем для фильтров
         new_street = filtres.cut_street(street)
         user.append(new_street)
