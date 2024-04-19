@@ -445,7 +445,7 @@ def day_west(start_day, date_now, date_for_goodscat, name_table):
                    "Измайловский 11",
                    "ЖК Галактика (Измайловский) [ 2]",
                    ]
-    save_connected_houses(answer, t_o, date_now, list_filter)
+    # save_connected_houses(answer, t_o, date_now, list_filter)
     # new_arr = []
     # for i in answer:
     #     str1 = str(i[3]) + ' ' + str(i[4])
@@ -501,7 +501,7 @@ def day_south(start_day, date_now, date_for_goodscat, name_table):
     to_exel.save_to_exel_from_userside(name_table, answer, t_o)
 
     list_filter = []
-    save_connected_houses(answer, t_o, date_now, list_filter)
+    # save_connected_houses(answer, t_o, date_now, list_filter)
 
 
 # Для ТО Север
@@ -596,7 +596,7 @@ def day_north(start_day, date_now, date_for_goodscat, name_table):
                    "ЖК Полис [ 2]"
                    ]
 
-    save_connected_houses(answer, t_o, date_now, list_filter)
+    # save_connected_houses(answer, t_o, date_now, list_filter)
 
     # "Прокофьева 7к2",
     #
@@ -715,7 +715,7 @@ def day_east(start_day, date_now, date_for_goodscat, name_table):
         "Дыбенко 8к1", "Дыбенко 8к2", "Дыбенко 8к3",
         "Дыбенко 8к(1, 2, 3): [ 3]",
     ]
-    save_connected_houses(answer, t_o, date_now, list_filter)
+    # save_connected_houses(answer, t_o, date_now, list_filter)
 
 
 # Недельный отчет
