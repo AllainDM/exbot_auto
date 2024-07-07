@@ -7,6 +7,8 @@ def cut_street(street):
         new_street = split_address[0]
     elif street == "Набережная Фонтанки":
         new_street = "Фонтанки"
+    elif street == "Воронцовский бульвар":
+        new_street = "Воронцовский"
     # elif street == "Канонерский остров":
     #     new_street = "Канонерский"
     elif street == "Воскресенская (Робеспьера)":

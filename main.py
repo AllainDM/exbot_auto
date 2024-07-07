@@ -1642,7 +1642,13 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
         user = []
         td_class_all = i.find_all('td', class_="")
         # print(f"td_class_all24146: {td_class_all}")
-        date1 = td_class_all[10].text[0:10]
+        try:
+            date1 = td_class_all[10].text[0:10]
+        except IndexError:
+            user = ["!!! Внимание, тут потенциально вьебанное подключение по ЭтХоуму, "
+                    "проверьте другим ботом и сообщите разработчику.",
+                    "", "", "", "", "", "", "", ""]
+            continue
         # Первым делом отсеим даты, при статусе Архив
         # Для статуса Архив, должна быть "вчерашняя" дата, то есть получаемая аргументом
         # if status == "archive":
@@ -1681,6 +1687,7 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
         # new_brand = ""
         print("################################################")
         print("Пытаемся вычислить Бренд")
+        print(f"ls: {answer[0]}")
         try:
             print(f"int(answer[0]) {int(answer[0])}")
             new_brand = search_brand(int(answer[0]))
@@ -1689,6 +1696,8 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
             print(f"answer[0] {answer[0]}")
             new_brand = search_brand(answer[0])
             print(f"new_brand {new_brand}")
+        # else:
+        #     new_brand = "нет"
         user.append(new_brand)  # Бренд
         # user.append("ЭтХоум")  # Бренд
 
@@ -1742,7 +1751,7 @@ def save_from_goodscat_for_day(table, status, date2, area, t_o):
                          "Кудрово", "Мурино", "Бугры пос.", "Репино", "Сестрорецк",
                          "Янино-1", "Песочный", "Лисий", "Горелово", "Коммунар",
                          "Колпино", "Горская", "Понтонный", "Тельмана пос.",
-                         "пос. Стрельна",]
+                         "пос. Стрельна", "Новогорелово", ]
 
         list_district = ["Колпинский р-н", "Ломоносовский р-н", "Всеволожский р-н"]
 
@@ -1814,15 +1823,16 @@ def parser_netup(gk_num):
     # session_netup = requests.Session()
 
     url_link = f"https://billing.athome.pro/payments.php?view={gk_num}&source=inet_dev"
+    print(f"url_link: {url_link}")
     try:
         html = session_netup.get(url_link)
         if html.status_code == 200:
+            # print("Код ответа 200")
             soup = BeautifulSoup(html.text, 'lxml')
             # table1 = soup.find_all('tr', class_="zebra")
             table1 = soup.find_all("form", class_="")
             table2 = table1[2]
             table3 = table2.find_all('td', class_="")
-            # print(table3)
             # Поскольку ячейки могут изменить свое положение после обновления, будем искать вручную
             num_ls = ""
             monter = ""
