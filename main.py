@@ -28,7 +28,6 @@ import filtres
 from for_api import search_brand
 
 session_goodscat = requests.Session()
-session_users = requests.Session()
 session_netup = requests.Session()
 
 bot = Bot(token=config.BOT_API_TOKEN)
@@ -36,13 +35,35 @@ dp = Dispatcher(bot)
 
 answ = ()
 
-url_login = "http://us.gblnet.net/oper/"
+url_login_get = "https://us.gblnet.net/"
+url_login = "https://us.gblnet.net/body/login"
+url = "https://us.gblnet.net/dashboard"
+
 url_login_goodscat = "https://inet.athome.pro/goodscat/user/authorize/"
 url_login_netup = "https://billing.athome.pro/"
 
 HEADERS = {
     "main": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0"
 }
+
+# Отдельно обработаем сессию Юзера для получения токена
+session_users = requests.Session()
+req_users = session_users.get(url_login_get)
+soup = BeautifulSoup(req_users.content, 'html.parser')
+# print(soup)
+print("###################")
+scripts = soup.find_all('script')
+csrf = None
+for script in scripts:
+    if script.string is not None:
+        # print(script.string)
+        script_lst = script.string.split(" ")
+        # print(script_lst)
+        for num, val in enumerate(script_lst):
+            if val == "_csrf:":
+                csrf = script_lst[num+1]
+print(f"csrf {csrf}")
+
 
 # Глобально создадим обьекты сессий, будем их обновлять перед запуском парсера
 if config.vpn_need:
@@ -51,7 +72,8 @@ if config.vpn_need:
     time.sleep(10)
 #
 data_users = {
-    "action": "login",
+    "_csrf": '',
+    "return_page": "",
     "username": config.loginUS,
     "password": config.pswUS
 }
@@ -72,9 +94,11 @@ data_netup = {
 def create_users_sessions():
     while True:
         try:
+            data_users["_csrf"] = csrf[1:-3]
             response_users2 = session_users.post(url_login, data=data_users, headers=HEADERS).text
             # session_users.post(url_login, data=data_users, headers=HEADERS)
             print("Сессия Юзера создана 2")
+            print(response_users2)
             return response_users2
         except ConnectionError:
             print("Ошибка создания сессии")
@@ -1452,7 +1476,9 @@ def get_html_users(date_now, start_day, name_table, t_o, t_o_link):
     print("t_o_link 111")
     print(t_o_link)
     try:
-        html = session_users.get(t_o_link)
+        # Добавим токен в заголовок
+        HEADERS["_csrf"] = csrf[1:-3]
+        html = session_users.get(t_o_link, headers=HEADERS)
         if html.status_code == 200:
             soup = BeautifulSoup(html.text, 'lxml')
             table = soup.find_all('tr', class_="cursor_pointer")
@@ -1906,7 +1932,9 @@ def get_html(t_o, mission, start_day, end_day):
     print(url3)
     try:
         print("Пробуем скачать страницу")
-        html = session_users.get(url3)
+        HEADERS["_csrf"] = csrf[1:-3]
+        html = session_users.get(url3, headers=HEADERS)
+        # html = session_users.get(url3)
         answer = []  # Ответ боту
         list_repairs_id = []  # Тут храним ИД ремонтов
         print("Проверка ответа")
